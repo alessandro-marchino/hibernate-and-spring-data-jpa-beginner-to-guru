@@ -16,6 +16,10 @@ public class DataInitializer implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		long count = bookRepository.count();
+		if(count != 0) {
+			return;
+		}
 		Book bookDDD = new Book("Domain Drive Design", "123", "Random House");
 		log.info("Id: {}", bookDDD.getId());
 		Book savedDDD = bookRepository.save(bookDDD);
