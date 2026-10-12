@@ -5,6 +5,5 @@ spring:
     password: password
     url: jdbc:mysql://localhost:3306/bookdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Europe/Rome
   jpa:
-    database: mysql
     hibernate:
       ddl-auto: update
