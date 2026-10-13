@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Commit;
 
@@ -17,6 +19,7 @@ import guru.springframework.spjpaintro.repositories.BookRepository;
 @DataJpaTest
 @ComponentScan(basePackages = "guru.springframework.spjpaintro.bootstrap")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@AutoConfigureTestDatabase(replace = Replace.NONE)
 public class SpringBootJpaTestSlice {
 
 	@Autowired BookRepository bookRepository;
