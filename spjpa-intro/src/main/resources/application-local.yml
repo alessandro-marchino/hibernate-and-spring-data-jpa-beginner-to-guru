@@ -4,9 +4,12 @@ spring:
     username: bookadmin
     password: password
     url: jdbc:mysql://localhost:3306/bookdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Europe/Rome
+  h2:
+    console:
+      enabled: false
   jpa:
     hibernate:
       ddl-auto: validate
-  sql:
-    init:
-      mode: always
+  # sql:
+  #   init:
+  #     mode: always

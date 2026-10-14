@@ -1,1 +1,7 @@
-databaseChangeLog: []
+databaseChangeLog:
+  - preConditions:
+     onFail: HALT
+     onError: HALT
+  - include:
+     file: 001-init.yml
+     relativeToChangelogFile: true
