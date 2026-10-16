@@ -15,7 +15,7 @@ spring:
     open-in-view: false
     database: mysql
     properties:
-      hibernate.dialect: org.hibernate.dialect.MySQLDialect
+      '[hibernate.dialect]': org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: validate
     defer-datasource-initialization: false

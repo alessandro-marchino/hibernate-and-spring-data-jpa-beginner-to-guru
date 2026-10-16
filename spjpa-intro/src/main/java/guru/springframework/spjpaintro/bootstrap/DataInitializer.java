@@ -22,8 +22,8 @@ public class DataInitializer implements CommandLineRunner {
 		if(count != 0) {
 			return;
 		}
-		bookRepository.save(new Book("Domain Drive Design", "123", "Random House"));
-		bookRepository.save(new Book("Spring In Action", "234234", "O'Reilly"));
+		bookRepository.save(new Book("Domain Drive Design", "123", "Random House", null));
+		bookRepository.save(new Book("Spring In Action", "234234", "O'Reilly", null));
 
 		bookRepository.findAll().forEach(book -> {
 			log.info("Book Id: {} - title: {}", book.getId(), book.getTitle());
