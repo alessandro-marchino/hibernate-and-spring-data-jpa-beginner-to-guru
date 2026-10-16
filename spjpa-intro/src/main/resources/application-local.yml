@@ -1,7 +1,7 @@
 
 spring:
   datasource:
-    username: bookadmin
+    username: bookuser
     password: password
     url: jdbc:mysql://localhost:3306/bookdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Europe/Rome
   h2:
@@ -13,3 +13,6 @@ spring:
   # sql:
   #   init:
   #     mode: always
+  liquibase:
+    user: bookadmin
+    password: password
