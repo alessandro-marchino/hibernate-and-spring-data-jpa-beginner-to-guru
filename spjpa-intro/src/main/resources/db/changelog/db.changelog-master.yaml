@@ -3,5 +3,8 @@ databaseChangeLog:
      onFail: HALT
      onError: HALT
   - include:
-     file: 001-init.yml
+     file: 001-baseline.yml
+     relativeToChangelogFile: true
+  - include:
+     file: 002-author.yml
      relativeToChangelogFile: true
