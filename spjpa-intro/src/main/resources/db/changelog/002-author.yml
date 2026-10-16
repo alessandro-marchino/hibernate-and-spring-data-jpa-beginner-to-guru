@@ -1,6 +1,6 @@
 databaseChangeLog:
 - changeSet:
-    id: 1791979585933-1
+    id: author-1
     author: alessandro-marchino
     changes:
     - createTable:
@@ -12,31 +12,20 @@ databaseChangeLog:
             name: id
             type: BIGINT
         - column:
-            name: isbn
+            name: first_name
             type: VARCHAR(255)
         - column:
-            name: publisher
+            name: last_name
             type: VARCHAR(255)
-        - column:
-            name: title
-            type: VARCHAR(255)
-        tableName: book
-- changeSet:
-    id: 1791979585933-2
-    author: alessandro-marchino
-    changes:
+        tableName: author
     - createTable:
         columns:
         - column:
             name: next_val
             type: BIGINT
-        tableName: book_seq
-- changeSet:
-    id: 1791979585933-3
-    author: alessandro-marchino
-    changes:
+        tableName: author_seq
     - insert:
-        tableName: book_seq
+        tableName: author_seq
         columns:
         - column:
             name: next_val
