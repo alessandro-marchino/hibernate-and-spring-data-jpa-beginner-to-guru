@@ -1,9 +1,9 @@
 package guru.springframework.sdjpajdbc.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Optional;
 
 import javax.sql.DataSource;
@@ -25,14 +25,16 @@ public class AuthorDaoImpl implements AuthorDao {
 	public Optional<Author> getById(Long id) {
 		try(
 				Connection connection = datasource.getConnection();
-				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("SELECT * FROM author WHERE id = " + id)) {
-			if(resultSet.next()) {
-				return Optional.of(Author.builder()
-					.id(id)
-					.firstName(resultSet.getString("first_name"))
-					.lastName(resultSet.getString("last_name"))
-					.build());
+				PreparedStatement statement = connection.prepareStatement("SELECT * FROM author WHERE id = ?")) {
+			statement.setLong(1, id);
+			try(ResultSet resultSet = statement.executeQuery()) {
+				if(resultSet.next()) {
+					return Optional.of(Author.builder()
+						.id(id)
+						.firstName(resultSet.getString("first_name"))
+						.lastName(resultSet.getString("last_name"))
+						.build());
+				}
 			}
 		} catch (SQLException e) {
 			log.error("Error in getById: {}", e.getMessage(), e);
