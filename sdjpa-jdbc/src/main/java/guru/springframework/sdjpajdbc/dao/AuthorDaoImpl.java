@@ -41,4 +41,26 @@ public class AuthorDaoImpl implements AuthorDao {
 		}
 		return Optional.empty();
 	}
+
+	@Override
+	public Optional<Author> getByName(String firstName, String lastName) {
+		try(
+				Connection connection = datasource.getConnection();
+				PreparedStatement statement = connection.prepareStatement("SELECT * FROM author WHERE first_name = ? AND last_name = ?")) {
+			statement.setString(1, firstName);
+			statement.setString(2, lastName);
+			try(ResultSet resultSet = statement.executeQuery()) {
+				if(resultSet.next()) {
+					return Optional.of(Author.builder()
+						.id(resultSet.getLong("id"))
+						.firstName(firstName)
+						.lastName(lastName)
+						.build());
+				}
+			}
+		} catch (SQLException e) {
+			log.error("Error in getByName: {}", e.getMessage(), e);
+		}
+		return Optional.empty();
+	}
 }

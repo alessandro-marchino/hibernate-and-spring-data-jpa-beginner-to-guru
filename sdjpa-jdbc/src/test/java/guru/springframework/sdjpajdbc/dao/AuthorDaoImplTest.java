@@ -27,4 +27,25 @@ public class AuthorDaoImplTest {
 		assertThat(author.get().getId()).isEqualTo(1L);
 		assertThat(author.get().getFirstName()).isEqualTo("Craig");
 	}
+
+	@Test
+	void testGetByIdNotFound() {
+		Optional<Author> author = authorDao.getById(100L);
+		assertThat(author).isEmpty();
+	}
+
+	@Test
+	void testGetByName() {
+		Optional<Author> author = authorDao.getByName("Craig", "Walls");
+		assertThat(author).isNotEmpty();
+		assertThat(author.get().getId()).isEqualTo(1L);
+		assertThat(author.get().getFirstName()).isEqualTo("Craig");
+		assertThat(author.get().getLastName()).isEqualTo("Walls");
+	}
+
+	@Test
+	void testGetByNameNotFound() {
+		Optional<Author> author = authorDao.getByName("John", "Thompson");
+		assertThat(author).isEmpty();
+	}
 }
