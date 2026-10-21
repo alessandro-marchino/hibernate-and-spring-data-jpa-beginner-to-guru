@@ -17,8 +17,10 @@ import org.springframework.test.annotation.Commit;
 
 import guru.springframework.spjpaintro.domain.AuthorUuid;
 import guru.springframework.spjpaintro.domain.Book;
+import guru.springframework.spjpaintro.domain.BookNatural;
 import guru.springframework.spjpaintro.domain.BookUuid;
 import guru.springframework.spjpaintro.repositories.AuthorUuidRepository;
+import guru.springframework.spjpaintro.repositories.BookNaturalRepository;
 import guru.springframework.spjpaintro.repositories.BookRepository;
 import guru.springframework.spjpaintro.repositories.BookUuidRepository;
 
@@ -30,6 +32,7 @@ public class SpringBootJpaTestSlice {
 
 	@Autowired BookRepository bookRepository;
 	@Autowired BookUuidRepository bookUuidRepository;
+	@Autowired BookNaturalRepository bookNaturalRepository;
 	@Autowired AuthorUuidRepository authorUuidRepository;
 
 	@Test
@@ -92,5 +95,27 @@ public class SpringBootJpaTestSlice {
 		assertThat(foundAuthor).isPresent();
 		assertThat(foundAuthor.get().getFirstName()).isEqualTo(firstName);
 		assertThat(foundAuthor.get().getLastName()).isEqualTo(lastName);
+	}
+
+	@Test
+	@Order(5)
+	void testBookNatural() {
+		long countBefore = bookNaturalRepository.count();
+		assertThat(countBefore).isEqualTo(0);
+		String title = "My book";
+		String isbn = "1234567890";
+		String publisher = "My Publisher";
+
+		BookNatural savedBook = bookNaturalRepository.save(new BookNatural(title, isbn, publisher));
+		assertThat(savedBook).isNotNull();
+
+		long countAfter = bookNaturalRepository.count();
+		assertThat(countAfter).isEqualTo(1);
+
+		Optional<BookNatural> foundBook = bookNaturalRepository.findById(title);
+		assertThat(foundBook).isPresent();
+		assertThat(foundBook.get().getTitle()).isEqualTo(title);
+		assertThat(foundBook.get().getIsbn()).isEqualTo(isbn);
+		assertThat(foundBook.get().getPublisher()).isEqualTo(publisher);
 	}
 }
