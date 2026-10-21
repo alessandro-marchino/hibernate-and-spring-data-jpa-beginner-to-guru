@@ -1,2 +1,0 @@
-DROP TABLE IF EXISTS book;
-DROP TABLE IF EXISTS book_seq;
