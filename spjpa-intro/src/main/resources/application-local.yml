@@ -13,6 +13,6 @@ spring:
   # sql:
   #   init:
   #     mode: always
-  liquibase:
+  flyway:
     user: bookadmin
     password: password
