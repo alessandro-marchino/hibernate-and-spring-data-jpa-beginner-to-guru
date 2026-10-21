@@ -48,4 +48,11 @@ public class AuthorDaoImplTest {
 		Optional<Author> author = authorDao.getByName("John", "Thompson");
 		assertThat(author).isEmpty();
 	}
+
+	@Test
+	void testSave() {
+		Author author = authorDao.save(Author.builder().firstName("John").lastName("Thompson").build());
+		assertThat(author).isNotNull();
+		assertThat(author.getId()).isGreaterThan(0L);
+	}
 }

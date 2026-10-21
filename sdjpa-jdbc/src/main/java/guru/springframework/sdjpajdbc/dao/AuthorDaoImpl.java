@@ -64,4 +64,26 @@ public class AuthorDaoImpl implements AuthorDao {
 			.build();
 	}
 
+	@Override
+	public Author save(Author dto) {
+		try(
+				Connection connection = datasource.getConnection();
+				PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO author(first_name, last_name) VALUES (?, ?)")) {
+			insertStatement.setString(1, dto.getFirstName());
+			insertStatement.setString(2, dto.getLastName());
+			boolean executed = insertStatement.execute();
+			log.debug("Executed? {}", executed);
+
+			try(
+					PreparedStatement idStatement = connection.prepareStatement("SELECT LAST_INSERT_ID()");
+					ResultSet rs = idStatement.executeQuery()) {
+				if(rs.next()) {
+					return this.getById(rs.getLong(1)).orElseThrow();
+				}
+			}
+		} catch (SQLException e) {
+			log.error("Error in getByName: {}", e.getMessage(), e);
+		}
+		return null;
+	}
 }
