@@ -15,10 +15,12 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Commit;
 
+import guru.springframework.spjpaintro.domain.AuthorComposite;
 import guru.springframework.spjpaintro.domain.AuthorUuid;
 import guru.springframework.spjpaintro.domain.Book;
 import guru.springframework.spjpaintro.domain.BookNatural;
 import guru.springframework.spjpaintro.domain.BookUuid;
+import guru.springframework.spjpaintro.repositories.AuthorCompositeRepository;
 import guru.springframework.spjpaintro.repositories.AuthorUuidRepository;
 import guru.springframework.spjpaintro.repositories.BookNaturalRepository;
 import guru.springframework.spjpaintro.repositories.BookRepository;
@@ -34,6 +36,7 @@ public class SpringBootJpaTestSlice {
 	@Autowired BookUuidRepository bookUuidRepository;
 	@Autowired BookNaturalRepository bookNaturalRepository;
 	@Autowired AuthorUuidRepository authorUuidRepository;
+	@Autowired AuthorCompositeRepository authorCompositeRepository;
 
 	@Test
 	@Order(1)
@@ -117,5 +120,23 @@ public class SpringBootJpaTestSlice {
 		assertThat(foundBook.get().getTitle()).isEqualTo(title);
 		assertThat(foundBook.get().getIsbn()).isEqualTo(isbn);
 		assertThat(foundBook.get().getPublisher()).isEqualTo(publisher);
+	}
+
+	@Test
+	@Order(6)
+	void testBookComposite() {
+		AuthorComposite.AuthorCompositeId id = new AuthorComposite.AuthorCompositeId("John", "T");
+
+		AuthorComposite savedAuthor = authorCompositeRepository.save(new AuthorComposite(id.getFirstName(), id.getLastName(), "US"));
+		assertThat(savedAuthor).isNotNull();
+
+		long countAfter = authorCompositeRepository.count();
+		assertThat(countAfter).isEqualTo(1);
+
+		Optional<AuthorComposite> foundAuthor = authorCompositeRepository.findById(id);
+		assertThat(foundAuthor).isPresent();
+		assertThat(foundAuthor.get().getFirstName()).isEqualTo(id.getFirstName());
+		assertThat(foundAuthor.get().getLastName()).isEqualTo(id.getLastName());
+		assertThat(foundAuthor.get().getCountry()).isEqualTo("US");
 	}
 }
