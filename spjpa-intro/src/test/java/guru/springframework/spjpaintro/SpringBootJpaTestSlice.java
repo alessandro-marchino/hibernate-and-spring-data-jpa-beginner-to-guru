@@ -16,11 +16,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Commit;
 
 import guru.springframework.spjpaintro.domain.AuthorComposite;
+import guru.springframework.spjpaintro.domain.AuthorEmbedded;
 import guru.springframework.spjpaintro.domain.AuthorUuid;
 import guru.springframework.spjpaintro.domain.Book;
 import guru.springframework.spjpaintro.domain.BookNatural;
 import guru.springframework.spjpaintro.domain.BookUuid;
 import guru.springframework.spjpaintro.repositories.AuthorCompositeRepository;
+import guru.springframework.spjpaintro.repositories.AuthorEmbeddedRepository;
 import guru.springframework.spjpaintro.repositories.AuthorUuidRepository;
 import guru.springframework.spjpaintro.repositories.BookNaturalRepository;
 import guru.springframework.spjpaintro.repositories.BookRepository;
@@ -37,6 +39,7 @@ public class SpringBootJpaTestSlice {
 	@Autowired BookNaturalRepository bookNaturalRepository;
 	@Autowired AuthorUuidRepository authorUuidRepository;
 	@Autowired AuthorCompositeRepository authorCompositeRepository;
+	@Autowired AuthorEmbeddedRepository authorEmbeddedRepository;
 
 	@Test
 	@Order(1)
@@ -137,6 +140,24 @@ public class SpringBootJpaTestSlice {
 		assertThat(foundAuthor).isPresent();
 		assertThat(foundAuthor.get().getFirstName()).isEqualTo(id.getFirstName());
 		assertThat(foundAuthor.get().getLastName()).isEqualTo(id.getLastName());
+		assertThat(foundAuthor.get().getCountry()).isEqualTo("US");
+	}
+
+	@Test
+	@Order(7)
+	void testBookEmbedded() {
+		AuthorEmbedded.AuthorEmbeddedId id = new AuthorEmbedded.AuthorEmbeddedId("John", "T");
+
+		AuthorEmbedded savedAuthor = authorEmbeddedRepository.save(new AuthorEmbedded(id, "US"));
+		assertThat(savedAuthor).isNotNull();
+
+		long countAfter = authorEmbeddedRepository.count();
+		assertThat(countAfter).isEqualTo(1);
+
+		Optional<AuthorEmbedded> foundAuthor = authorEmbeddedRepository.findById(id);
+		assertThat(foundAuthor).isPresent();
+		assertThat(foundAuthor.get().getEmbeddedId().getFirstName()).isEqualTo(id.getFirstName());
+		assertThat(foundAuthor.get().getEmbeddedId().getLastName()).isEqualTo(id.getLastName());
 		assertThat(foundAuthor.get().getCountry()).isEqualTo("US");
 	}
 }
