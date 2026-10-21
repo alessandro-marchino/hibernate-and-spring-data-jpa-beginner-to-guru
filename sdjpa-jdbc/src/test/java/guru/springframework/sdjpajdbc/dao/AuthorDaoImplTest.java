@@ -24,5 +24,7 @@ public class AuthorDaoImplTest {
 	void testGetById() {
 		Optional<Author> author = authorDao.getById(1L);
 		assertThat(author).isNotEmpty();
+		assertThat(author.get().getId()).isEqualTo(1L);
+		assertThat(author.get().getFirstName()).isEqualTo("Craig");
 	}
 }
