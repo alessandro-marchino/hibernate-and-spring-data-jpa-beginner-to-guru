@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.sdjpajdbc.domain.Author;
@@ -23,9 +25,8 @@ public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Optional<Author> getById(Long id) {
-		try(
-				Connection connection = datasource.getConnection();
-				PreparedStatement statement = connection.prepareStatement("SELECT * FROM author WHERE id = ?")) {
+		Connection connection = DataSourceUtils.getConnection(datasource);
+		try(PreparedStatement statement = connection.prepareStatement("SELECT * FROM author WHERE id = ?")) {
 			statement.setLong(1, id);
 			try(ResultSet resultSet = statement.executeQuery()) {
 				if(resultSet.next()) {
@@ -34,15 +35,16 @@ public class AuthorDaoImpl implements AuthorDao {
 			}
 		} catch (SQLException e) {
 			log.error("Error in getById: {}", e.getMessage(), e);
+		} finally {
+			DataSourceUtils.releaseConnection(connection, datasource);
 		}
 		return Optional.empty();
 	}
 
 	@Override
 	public Optional<Author> getByName(String firstName, String lastName) {
-		try(
-				Connection connection = datasource.getConnection();
-				PreparedStatement statement = connection.prepareStatement("SELECT * FROM author WHERE first_name = ? AND last_name = ?")) {
+		Connection connection = DataSourceUtils.getConnection(datasource);
+		try(PreparedStatement statement = connection.prepareStatement("SELECT * FROM author WHERE first_name = ? AND last_name = ?")) {
 			statement.setString(1, firstName);
 			statement.setString(2, lastName);
 			try(ResultSet resultSet = statement.executeQuery()) {
@@ -52,8 +54,49 @@ public class AuthorDaoImpl implements AuthorDao {
 			}
 		} catch (SQLException e) {
 			log.error("Error in getByName: {}", e.getMessage(), e);
+		} finally {
+			DataSourceUtils.releaseConnection(connection, datasource);
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public Author save(Author dto) {
+		Connection connection = DataSourceUtils.getConnection(datasource);
+		try(PreparedStatement statement = connection.prepareStatement("INSERT INTO author(first_name, last_name) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+			statement.setString(1, dto.getFirstName());
+			statement.setString(2, dto.getLastName());
+			statement.execute();
+
+			try(ResultSet rs = statement.getGeneratedKeys()) {
+				if(rs.next()) {
+					long id = rs.getLong(1);
+					log.info("Inserted id: {}", id);
+					return this.getById(id).orElseThrow();
+				}
+			}
+		} catch (SQLException e) {
+			log.error("Error in getByName: {}", e.getMessage(), e);
+		} finally {
+			DataSourceUtils.releaseConnection(connection, datasource);
+		}
+		return null;
+	}
+
+	@Override
+	public Author update(Author dto) {
+		Connection connection = DataSourceUtils.getConnection(datasource);
+		try(PreparedStatement statement = connection.prepareStatement("UPDATE author SET first_name = ?, last_name = ? WHERE id = ?")) {
+			statement.setString(1, dto.getFirstName());
+			statement.setString(2, dto.getLastName());
+			statement.setLong(3, dto.getId());
+			statement.execute();
+		} catch (SQLException e) {
+			log.error("Error in getByName: {}", e.getMessage(), e);
+		} finally {
+			DataSourceUtils.releaseConnection(connection, datasource);
+		}
+		return this.getById(dto.getId()).orElseThrow();
 	}
 
 	private Author getAuthorFromResultSet(ResultSet rs) throws SQLException {
@@ -64,26 +107,4 @@ public class AuthorDaoImpl implements AuthorDao {
 			.build();
 	}
 
-	@Override
-	public Author save(Author dto) {
-		try(
-				Connection connection = datasource.getConnection();
-				PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO author(first_name, last_name) VALUES (?, ?)")) {
-			insertStatement.setString(1, dto.getFirstName());
-			insertStatement.setString(2, dto.getLastName());
-			boolean executed = insertStatement.execute();
-			log.debug("Executed? {}", executed);
-
-			try(
-					PreparedStatement idStatement = connection.prepareStatement("SELECT LAST_INSERT_ID()");
-					ResultSet rs = idStatement.executeQuery()) {
-				if(rs.next()) {
-					return this.getById(rs.getLong(1)).orElseThrow();
-				}
-			}
-		} catch (SQLException e) {
-			log.error("Error in getByName: {}", e.getMessage(), e);
-		}
-		return null;
-	}
 }
