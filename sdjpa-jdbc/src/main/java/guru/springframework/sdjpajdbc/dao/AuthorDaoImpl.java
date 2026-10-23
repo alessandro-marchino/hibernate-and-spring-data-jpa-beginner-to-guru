@@ -1,15 +1,13 @@
 package guru.springframework.sdjpajdbc.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Optional;
 
-import javax.sql.DataSource;
-
-import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.sdjpajdbc.domain.Author;
@@ -21,98 +19,58 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AuthorDaoImpl implements AuthorDao {
 
-	private final DataSource datasource;
+	private final NamedParameterJdbcOperations jdbcTemplate;
 
 	@Override
 	public Optional<Author> getById(Long id) {
-		Connection connection = DataSourceUtils.getConnection(datasource);
-		try(PreparedStatement statement = connection.prepareStatement("SELECT * FROM author WHERE id = ?")) {
-			statement.setLong(1, id);
-			try(ResultSet resultSet = statement.executeQuery()) {
-				if(resultSet.next()) {
-					return Optional.of(getAuthorFromResultSet(resultSet));
-				}
-			}
-		} catch (SQLException e) {
-			log.error("Error in getById: {}", e.getMessage(), e);
-		} finally {
-			DataSourceUtils.releaseConnection(connection, datasource);
-		}
-		return Optional.empty();
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("id", id);
+		return jdbcTemplate.query("SELECT * FROM author WHERE id = :id", params, this::getAuthorFromResultSet)
+			.stream()
+			.findFirst();
 	}
 
 	@Override
 	public Optional<Author> getByName(String firstName, String lastName) {
-		Connection connection = DataSourceUtils.getConnection(datasource);
-		try(PreparedStatement statement = connection.prepareStatement("SELECT * FROM author WHERE first_name = ? AND last_name = ?")) {
-			statement.setString(1, firstName);
-			statement.setString(2, lastName);
-			try(ResultSet resultSet = statement.executeQuery()) {
-				if(resultSet.next()) {
-					return Optional.of(getAuthorFromResultSet(resultSet));
-				}
-			}
-		} catch (SQLException e) {
-			log.error("Error in getByName: {}", e.getMessage(), e);
-		} finally {
-			DataSourceUtils.releaseConnection(connection, datasource);
-		}
-		return Optional.empty();
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("firstName", firstName);
+		params.addValue("lastName", lastName);
+		return jdbcTemplate.query("SELECT * FROM author WHERE first_name = :firstName AND last_name = :lastName", params, this::getAuthorFromResultSet)
+			.stream()
+			.findFirst();
 	}
 
 	@Override
 	public Author save(Author dto) {
-		Connection connection = DataSourceUtils.getConnection(datasource);
-		try(PreparedStatement statement = connection.prepareStatement("INSERT INTO author(first_name, last_name) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)) {
-			statement.setString(1, dto.getFirstName());
-			statement.setString(2, dto.getLastName());
-			statement.execute();
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("firstName", dto.getFirstName());
+		params.addValue("lastName", dto.getLastName());
+		KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
 
-			try(ResultSet rs = statement.getGeneratedKeys()) {
-				if(rs.next()) {
-					long id = rs.getLong(1);
-					log.info("Inserted id: {}", id);
-					return this.getById(id).orElseThrow();
-				}
-			}
-		} catch (SQLException e) {
-			log.error("Error in save: {}", e.getMessage(), e);
-		} finally {
-			DataSourceUtils.releaseConnection(connection, datasource);
-		}
-		return null;
+		jdbcTemplate.update("INSERT INTO author(first_name, last_name) VALUES (:firstName, :lastName)", params, generatedKeyHolder);
+		return getById(generatedKeyHolder.getKey().longValue()).orElseThrow();
 	}
 
 	@Override
 	public Author update(Author dto) {
-		Connection connection = DataSourceUtils.getConnection(datasource);
-		try(PreparedStatement statement = connection.prepareStatement("UPDATE author SET first_name = ?, last_name = ? WHERE id = ?")) {
-			statement.setString(1, dto.getFirstName());
-			statement.setString(2, dto.getLastName());
-			statement.setLong(3, dto.getId());
-			statement.execute();
-		} catch (SQLException e) {
-			log.error("Error in update: {}", e.getMessage(), e);
-		} finally {
-			DataSourceUtils.releaseConnection(connection, datasource);
-		}
-		return this.getById(dto.getId()).orElseThrow();
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("firstName", dto.getFirstName());
+		params.addValue("lastName", dto.getLastName());
+		params.addValue("id", dto.getId());
+
+		jdbcTemplate.update("UPDATE author SET first_name = :firstName, last_name = :lastName WHERE id = :id", params);
+		return getById(dto.getId()).orElseThrow();
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		Connection connection = DataSourceUtils.getConnection(datasource);
-		try(PreparedStatement statement = connection.prepareStatement("DELETE FROM author WHERE id = ?")) {
-			statement.setLong(1, id);
-			statement.execute();
-		} catch (SQLException e) {
-			log.error("Error in deleteById: {}", e.getMessage(), e);
-		} finally {
-			DataSourceUtils.releaseConnection(connection, datasource);
-		}
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("id", id);
+
+		jdbcTemplate.update("DELETE FROM author WHERE id = :id", params);
 	}
 
-	private Author getAuthorFromResultSet(ResultSet rs) throws SQLException {
+	private Author getAuthorFromResultSet(ResultSet rs, int rowNum) throws SQLException {
 		return Author.builder()
 			.id(rs.getLong("id"))
 			.firstName(rs.getString("first_name"))
