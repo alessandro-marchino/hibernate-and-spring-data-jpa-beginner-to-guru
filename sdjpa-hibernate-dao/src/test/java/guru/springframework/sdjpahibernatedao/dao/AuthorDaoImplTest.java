@@ -23,6 +23,12 @@ public class AuthorDaoImplTest {
 	@Autowired AuthorDao authorDao;
 
 	@Test
+	void testFindAll() {
+		List<Author> authors = authorDao.findAll();
+		assertThat(authors).isNotEmpty();
+	}
+
+	@Test
 	void testGetById() {
 		Optional<Author> author = authorDao.getById(1L);
 		assertThat(author).isNotEmpty();

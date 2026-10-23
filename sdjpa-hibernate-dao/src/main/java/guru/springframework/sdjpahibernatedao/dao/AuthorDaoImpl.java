@@ -18,6 +18,12 @@ public class AuthorDaoImpl implements AuthorDao {
 	private final EntityManager entityManager;
 
 	@Override
+	public List<Author> findAll() {
+		TypedQuery<Author> query = entityManager.createNamedQuery("Author.findAll", Author.class);
+		return query.getResultList();
+	}
+
+	@Override
 	public Optional<Author> getById(Long id) {
 		return Optional.ofNullable(entityManager.find(Author.class, id));
 	}
