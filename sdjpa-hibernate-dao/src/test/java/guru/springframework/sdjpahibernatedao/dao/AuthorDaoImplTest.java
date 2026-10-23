@@ -2,6 +2,7 @@ package guru.springframework.sdjpahibernatedao.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,12 @@ public class AuthorDaoImplTest {
 		assertThat(author.get().getId()).isEqualTo(1L);
 		assertThat(author.get().getFirstName()).isEqualTo("Craig");
 		assertThat(author.get().getLastName()).isEqualTo("Walls");
+	}
+
+	@Test
+	void testListAuthorByLastNameLike() {
+		List<Author> authors = authorDao.listAuthorByLastNameLike("Wall");
+		assertThat(authors).isNotEmpty();
 	}
 
 	@Test

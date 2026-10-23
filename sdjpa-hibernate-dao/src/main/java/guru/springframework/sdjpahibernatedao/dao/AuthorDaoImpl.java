@@ -1,5 +1,6 @@
 package guru.springframework.sdjpahibernatedao.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import guru.springframework.sdjpahibernatedao.domain.Author;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +29,14 @@ public class AuthorDaoImpl implements AuthorDao {
 		query.setParameter("firstName", firstName);
 		query.setParameter("lastName", lastName);
 		return query.getResultStream().findFirst();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Author> listAuthorByLastNameLike(String lastName) {
+		Query query = entityManager.createQuery("SELECT a FROM Author a WHERE a.lastName LIKE :lastName");
+		query.setParameter("lastName", lastName + "%");
+		return query.getResultList();
 	}
 
 	@Override

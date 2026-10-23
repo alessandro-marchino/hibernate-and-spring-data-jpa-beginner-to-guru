@@ -1,5 +1,6 @@
 package guru.springframework.sdjpahibernatedao.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import guru.springframework.sdjpahibernatedao.domain.Author;
@@ -15,4 +16,6 @@ public interface AuthorDao {
 	Author updateAuthor(Author author);
 
 	void deleteAuthorById(Long id);
+
+	List<Author> listAuthorByLastNameLike(String lastName);
 }
