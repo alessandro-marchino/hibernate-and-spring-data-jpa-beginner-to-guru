@@ -52,6 +52,17 @@ public class BookDaoImplTest {
 	}
 
 	@Test
+	void testFindByISBN() {
+		Optional<Book> book = bookDao.findByISBN("978-0321125217");
+		assertThat(book).isNotEmpty();
+		assertThat(book.get().getId()).isEqualTo(4L);
+		assertThat(book.get().getTitle()).isEqualTo("Domain-Driven Design");
+		assertThat(book.get().getPublisher()).isEqualTo("Addison Wesley");
+		assertThat(book.get().getIsbn()).isEqualTo("978-0321125217");
+		assertThat(book.get().getAuthorId()).isEqualTo(2L);
+	}
+
+	@Test
 	void testSave() {
 		Book book = bookDao.save(Book.builder().title("My test Book").authorId(1L).isbn("000-123456789").publisher("My own").build());
 		assertThat(book).isNotNull();
