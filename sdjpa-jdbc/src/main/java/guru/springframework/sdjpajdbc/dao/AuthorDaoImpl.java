@@ -7,7 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import guru.springframework.sdjpajdbc.dao.mapper.AuthorMapper;
+import guru.springframework.sdjpajdbc.dao.mapper.AuthorExtractor;
 import guru.springframework.sdjpajdbc.domain.Author;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,23 +18,34 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthorDaoImpl implements AuthorDao {
 
 	private final JdbcClient jdbcClient;
-	private final AuthorMapper authorMapper;
+	private final AuthorExtractor authorExtractor;
 
 	@Override
 	public Optional<Author> getById(Long id) {
-		return jdbcClient.sql("SELECT * FROM author WHERE id = :id")
+		return jdbcClient.sql("""
+				SELECT author.id AS id, author.first_name, author.last_name,
+					book.id AS book_id, book.isbn, book.publisher, book.title
+				FROM author
+				LEFT OUTER JOIN book ON author.id = book.author_id
+				WHERE author.id = :id
+				""")
 			.param("id", id)
-			.query(authorMapper)
-			.optional();
+			.query(authorExtractor);
 	}
 
 	@Override
 	public Optional<Author> getByName(String firstName, String lastName) {
-		return jdbcClient.sql("SELECT * FROM author WHERE first_name = :firstName AND last_name = :lastName")
+		return jdbcClient.sql("""
+				SELECT author.id AS id, author.first_name, author.last_name,
+					book.id AS book_id, book.isbn, book.publisher, book.title
+				FROM author
+				LEFT OUTER JOIN book ON author.id = book.author_id
+				WHERE author.first_name = :firstName
+				AND author.last_name = :lastName
+				""")
 			.param("firstName", firstName)
 			.param("lastName", lastName)
-			.query(authorMapper)
-			.optional();
+			.query(authorExtractor);
 	}
 
 	@Override

@@ -27,6 +27,9 @@ public class AuthorDaoImplTest {
 		assertThat(author).isNotEmpty();
 		assertThat(author.get().getId()).isEqualTo(1L);
 		assertThat(author.get().getFirstName()).isEqualTo("Craig");
+
+		assertThat(author.get().getBooks()).isNotEmpty();
+		assertThat(author.get().getBooks()).hasSize(3);
 	}
 
 	@Test
