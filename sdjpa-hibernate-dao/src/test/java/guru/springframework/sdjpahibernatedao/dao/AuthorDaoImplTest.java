@@ -71,16 +71,16 @@ public class AuthorDaoImplTest {
 
 	@Test
 	void testDelete() {
-		// Author saved = authorDao.saveNewAuthor(Author.builder().firstName("John").lastName("T").build());
-		// authorDao.deleteAuthorById(saved.getId());
+		Author saved = authorDao.saveNewAuthor(Author.builder().firstName("John").lastName("T").build());
+		authorDao.deleteAuthorById(saved.getId());
 
-		// Optional<Author> found = authorDao.getById(saved.getId());
-		// assertThat(found).isEmpty();
+		Optional<Author> found = authorDao.getById(saved.getId());
+		assertThat(found).isEmpty();
 	}
 
 	@Test
 	void testDeleteNotExisting() {
 		// Assert not throws
-		// authorDao.deleteAuthorById(999L);
+		authorDao.deleteAuthorById(999L);
 	}
 }

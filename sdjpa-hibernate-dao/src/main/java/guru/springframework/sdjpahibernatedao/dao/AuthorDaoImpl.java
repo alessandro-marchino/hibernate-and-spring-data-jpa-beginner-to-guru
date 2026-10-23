@@ -31,7 +31,6 @@ public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Author saveNewAuthor(Author author) {
-		// entityManager.joinTransaction();
 		entityManager.persist(author);
 		entityManager.flush();
 		return author;
@@ -39,7 +38,6 @@ public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Author updateAuthor(Author author) {
-		// em.joinTransaction();
 		entityManager.merge(author);
 		entityManager.flush();
 		entityManager.clear();
@@ -48,8 +46,11 @@ public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public void deleteAuthorById(Long id) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'deleteAuthorById'");
+		Author author = entityManager.find(Author.class, id);
+		if(author != null) {
+			entityManager.remove(author);
+			entityManager.flush();
+		}
 	}
 
 }
