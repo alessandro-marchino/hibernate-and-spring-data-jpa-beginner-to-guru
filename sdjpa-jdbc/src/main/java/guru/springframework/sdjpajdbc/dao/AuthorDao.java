@@ -10,5 +10,6 @@ public interface AuthorDao {
 	Optional<Author> getByName(String firstName, String lastName);
 	Author save(Author dto);
 	Author update(Author dto);
+	void deleteById(Long id);
 
 }

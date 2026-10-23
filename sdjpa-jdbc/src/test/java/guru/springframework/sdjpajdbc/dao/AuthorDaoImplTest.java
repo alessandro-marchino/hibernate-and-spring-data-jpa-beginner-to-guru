@@ -22,7 +22,6 @@ public class AuthorDaoImplTest {
 	@Autowired AuthorDao authorDao;
 
 	@Test
-	@Transactional
 	void testGetById() {
 		Optional<Author> author = authorDao.getById(1L);
 		assertThat(author).isNotEmpty();
@@ -31,14 +30,12 @@ public class AuthorDaoImplTest {
 	}
 
 	@Test
-	@Transactional
 	void testGetByIdNotFound() {
 		Optional<Author> author = authorDao.getById(100L);
 		assertThat(author).isEmpty();
 	}
 
 	@Test
-	@Transactional
 	void testGetByName() {
 		Optional<Author> author = authorDao.getByName("Craig", "Walls");
 		assertThat(author).isNotEmpty();
@@ -48,7 +45,6 @@ public class AuthorDaoImplTest {
 	}
 
 	@Test
-	@Transactional
 	void testGetByNameNotFound() {
 		Optional<Author> author = authorDao.getByName("John", "Thompson");
 		assertThat(author).isEmpty();
@@ -71,5 +67,15 @@ public class AuthorDaoImplTest {
 		assertThat(updated).isNotNull();
 		assertThat(updated.getId()).isGreaterThan(0L);
 		assertThat(updated.getLastName()).isEqualTo("Thompson");
+	}
+
+	@Test
+	@Transactional
+	void testDelete() {
+		Author saved = authorDao.save(Author.builder().firstName("John").lastName("T").build());
+		authorDao.deleteById(saved.getId());
+
+		Optional<Author> found = authorDao.getById(saved.getId());
+		assertThat(found).isEmpty();
 	}
 }

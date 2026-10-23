@@ -76,7 +76,7 @@ public class AuthorDaoImpl implements AuthorDao {
 				}
 			}
 		} catch (SQLException e) {
-			log.error("Error in getByName: {}", e.getMessage(), e);
+			log.error("Error in save: {}", e.getMessage(), e);
 		} finally {
 			DataSourceUtils.releaseConnection(connection, datasource);
 		}
@@ -92,11 +92,24 @@ public class AuthorDaoImpl implements AuthorDao {
 			statement.setLong(3, dto.getId());
 			statement.execute();
 		} catch (SQLException e) {
-			log.error("Error in getByName: {}", e.getMessage(), e);
+			log.error("Error in update: {}", e.getMessage(), e);
 		} finally {
 			DataSourceUtils.releaseConnection(connection, datasource);
 		}
 		return this.getById(dto.getId()).orElseThrow();
+	}
+
+	@Override
+	public void deleteById(Long id) {
+		Connection connection = DataSourceUtils.getConnection(datasource);
+		try(PreparedStatement statement = connection.prepareStatement("DELETE FROM author WHERE id = ?")) {
+			statement.setLong(1, id);
+			statement.execute();
+		} catch (SQLException e) {
+			log.error("Error in deleteById: {}", e.getMessage(), e);
+		} finally {
+			DataSourceUtils.releaseConnection(connection, datasource);
+		}
 	}
 
 	private Author getAuthorFromResultSet(ResultSet rs) throws SQLException {
