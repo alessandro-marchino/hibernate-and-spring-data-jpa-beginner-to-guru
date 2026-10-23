@@ -16,7 +16,7 @@ import jakarta.transaction.Transactional;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@ComponentScan(basePackages = { "guru.springframework.sdjpajdbc.dao" })
+@ComponentScan(basePackages = { "guru.springframework.sdjpahibernatedao.dao" })
 public class AuthorDaoImplTest {
 
 	@Autowired AuthorDao authorDao;

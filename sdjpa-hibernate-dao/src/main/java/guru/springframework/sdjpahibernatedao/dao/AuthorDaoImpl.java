@@ -5,16 +5,18 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.sdjpahibernatedao.domain.Author;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
 public class AuthorDaoImpl implements AuthorDao {
+	private final EntityManagerFactory emf;
 
 	@Override
 	public Optional<Author> getById(Long id) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getById'");
+		return Optional.ofNullable(getEntityManager().find(Author.class, id));
 	}
 
 	@Override
@@ -41,4 +43,7 @@ public class AuthorDaoImpl implements AuthorDao {
 		throw new UnsupportedOperationException("Unimplemented method 'deleteAuthorById'");
 	}
 
+	private EntityManager getEntityManager() {
+		return emf.createEntityManager();
+	}
 }
