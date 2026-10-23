@@ -51,7 +51,6 @@ public class AuthorDaoImplTest {
 	}
 
 	@Test
-	@Transactional
 	void testSave() {
 		Author author = authorDao.saveNewAuthor(Author.builder().firstName("John").lastName("Thompson").build());
 		assertThat(author).isNotNull();
