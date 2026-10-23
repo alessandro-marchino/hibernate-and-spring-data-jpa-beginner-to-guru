@@ -121,4 +121,11 @@ public class BookDaoImplTest {
 		Optional<Book> found = bookDao.getById(saved.getId());
 		assertThat(found).isEmpty();
 	}
+
+	@Test
+	@Transactional
+	void testDeleteNotExisting() {
+		// Assert not throws
+		bookDao.deleteById(999L);
+	}
 }

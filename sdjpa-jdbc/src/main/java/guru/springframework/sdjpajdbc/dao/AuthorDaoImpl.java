@@ -1,15 +1,13 @@
 package guru.springframework.sdjpajdbc.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Optional;
 
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import guru.springframework.sdjpajdbc.dao.mapper.AuthorMapper;
 import guru.springframework.sdjpajdbc.domain.Author;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthorDaoImpl implements AuthorDao {
 
 	private final JdbcClient jdbcClient;
+	private final AuthorMapper authorMapper;
 
 	@Override
 	public Optional<Author> getById(Long id) {
 		return jdbcClient.sql("SELECT * FROM author WHERE id = :id")
 			.param("id", id)
-			.query(AuthorMapper.INSTANCE)
+			.query(authorMapper)
 			.optional();
 	}
 
@@ -34,7 +33,7 @@ public class AuthorDaoImpl implements AuthorDao {
 		return jdbcClient.sql("SELECT * FROM author WHERE first_name = :firstName AND last_name = :lastName")
 			.param("firstName", firstName)
 			.param("lastName", lastName)
-			.query(AuthorMapper.INSTANCE)
+			.query(authorMapper)
 			.optional();
 	}
 
@@ -65,18 +64,6 @@ public class AuthorDaoImpl implements AuthorDao {
 		jdbcClient.sql("DELETE FROM author WHERE id = :id")
 			.param("id", id)
 			.update();
-	}
-
-	static class AuthorMapper implements RowMapper<Author> {
-		static final AuthorMapper INSTANCE = new AuthorMapper();
-		@Override
-		public Author mapRow(ResultSet rs, int rowNum) throws SQLException {
-			return Author.builder()
-				.id(rs.getLong("id"))
-				.firstName(rs.getString("first_name"))
-				.lastName(rs.getString("last_name"))
-				.build();
-		}
 	}
 
 }
