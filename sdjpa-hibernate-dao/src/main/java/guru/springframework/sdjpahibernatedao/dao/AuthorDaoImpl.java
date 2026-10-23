@@ -2,27 +2,28 @@ package guru.springframework.sdjpahibernatedao.dao;
 
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.sdjpahibernatedao.domain.Author;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@EnableJpaRepositories
 @Component
 public class AuthorDaoImpl implements AuthorDao {
-	private final EntityManagerFactory emf;
+	private final EntityManager entityManager;
 
 	@Override
 	public Optional<Author> getById(Long id) {
-		return Optional.ofNullable(getEntityManager().find(Author.class, id));
+		return Optional.ofNullable(entityManager.find(Author.class, id));
 	}
 
 	@Override
 	public Optional<Author> findAuthorByName(String firstName, String lastName) {
-		TypedQuery<Author> query = getEntityManager().createQuery("SELECT a FROM Author a WHERE a.firstName = :firstName AND a.lastName = :lastName", Author.class);
+		TypedQuery<Author> query = entityManager.createQuery("SELECT a FROM Author a WHERE a.firstName = :firstName AND a.lastName = :lastName", Author.class);
 		query.setParameter("firstName", firstName);
 		query.setParameter("lastName", lastName);
 		return query.getResultStream().findFirst();
@@ -30,17 +31,19 @@ public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Author saveNewAuthor(Author author) {
-		EntityManager em = getEntityManager();
-		em.joinTransaction();
-		em.persist(author);
-		em.flush();
+		// entityManager.joinTransaction();
+		entityManager.persist(author);
+		entityManager.flush();
 		return author;
 	}
 
 	@Override
 	public Author updateAuthor(Author author) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'updateAuthor'");
+		// em.joinTransaction();
+		entityManager.merge(author);
+		entityManager.flush();
+		entityManager.clear();
+		return entityManager.find(Author.class, author.getId());
 	}
 
 	@Override
@@ -49,7 +52,4 @@ public class AuthorDaoImpl implements AuthorDao {
 		throw new UnsupportedOperationException("Unimplemented method 'deleteAuthorById'");
 	}
 
-	private EntityManager getEntityManager() {
-		return emf.createEntityManager();
-	}
 }
