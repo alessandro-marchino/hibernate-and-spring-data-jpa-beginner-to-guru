@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,7 +26,7 @@ public class AuthorDaoImpl implements AuthorDao {
 	public Optional<Author> getById(Long id) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("id", id);
-		return jdbcTemplate.query("SELECT * FROM author WHERE id = :id", params, this::getAuthorFromResultSet)
+		return jdbcTemplate.query("SELECT * FROM author WHERE id = :id", params, AuthorMapper.INSTANCE)
 			.stream()
 			.findFirst();
 	}
@@ -35,7 +36,7 @@ public class AuthorDaoImpl implements AuthorDao {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("firstName", firstName);
 		params.addValue("lastName", lastName);
-		return jdbcTemplate.query("SELECT * FROM author WHERE first_name = :firstName AND last_name = :lastName", params, this::getAuthorFromResultSet)
+		return jdbcTemplate.query("SELECT * FROM author WHERE first_name = :firstName AND last_name = :lastName", params, AuthorMapper.INSTANCE)
 			.stream()
 			.findFirst();
 	}
@@ -70,12 +71,16 @@ public class AuthorDaoImpl implements AuthorDao {
 		jdbcTemplate.update("DELETE FROM author WHERE id = :id", params);
 	}
 
-	private Author getAuthorFromResultSet(ResultSet rs, int rowNum) throws SQLException {
-		return Author.builder()
-			.id(rs.getLong("id"))
-			.firstName(rs.getString("first_name"))
-			.lastName(rs.getString("last_name"))
-			.build();
+	static class AuthorMapper implements RowMapper<Author> {
+		static final AuthorMapper INSTANCE = new AuthorMapper();
+		@Override
+		public Author mapRow(ResultSet rs, int rowNum) throws SQLException {
+			return Author.builder()
+				.id(rs.getLong("id"))
+				.firstName(rs.getString("first_name"))
+				.lastName(rs.getString("last_name"))
+				.build();
+		}
 	}
 
 }
