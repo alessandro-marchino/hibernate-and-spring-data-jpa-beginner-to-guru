@@ -78,4 +78,11 @@ public class AuthorDaoImplTest {
 		Optional<Author> found = authorDao.getById(saved.getId());
 		assertThat(found).isEmpty();
 	}
+
+	@Test
+	@Transactional
+	void testDeleteNotExisting() {
+		// Assert not throws
+		authorDao.deleteById(999L);
+	}
 }
