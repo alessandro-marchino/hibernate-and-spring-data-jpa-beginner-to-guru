@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import guru.springframework.sdjpahibernatedao.domain.Author;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -21,8 +22,10 @@ public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Optional<Author> findAuthorByName(String firstName, String lastName) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'findAuthorByName'");
+		TypedQuery<Author> query = getEntityManager().createQuery("SELECT a FROM Author a WHERE a.firstName = :firstName AND a.lastName = :lastName", Author.class);
+		query.setParameter("firstName", firstName);
+		query.setParameter("lastName", lastName);
+		return query.getResultStream().findFirst();
 	}
 
 	@Override
