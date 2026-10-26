@@ -27,7 +27,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Optional<Author> findAuthorByName(String firstName, String lastName) {
-		throw new UnsupportedOperationException("Not implemented");
+		return authorRepository.findByFirstNameAndLastName(firstName, lastName);
 	}
 
 	@Override
