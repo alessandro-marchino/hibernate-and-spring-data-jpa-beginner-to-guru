@@ -9,6 +9,9 @@ import guru.springframework.sdjpahibernatedao.domain.Book;
 import guru.springframework.sdjpahibernatedao.domain.Book_;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -31,6 +34,19 @@ public class BookDaoImpl implements BookDao {
 	public Optional<Book> getByTitle(String title) {
 		TypedQuery<Book> query = em.createNamedQuery(Book_.QUERY_BOOK_FIND_BY_TITLE, Book.class);
 		query.setParameter("title", title);
+		return query.getResultStream().findFirst();
+	}
+
+	@Override
+	public Optional<Book> getByTitleCriteria(String title) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Book> cq = cb.createQuery(Book.class);
+		Root<Book> root = cq.from(Book.class);
+		cq = cq.select(root)
+		.where(
+			cb.equal(root.get(Book_.title), title)
+		);
+		TypedQuery<Book> query = em.createQuery(cq);
 		return query.getResultStream().findFirst();
 	}
 
