@@ -19,6 +19,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NamedQuery(name = "Author.findAll", query = "FROM Author")
 @NamedQuery(name = "Author.findByName", query = "FROM Author WHERE firstName = :firstName AND lastName = :lastName")
+@NamedQuery(name = "Author.findByLastName", query = "FROM Author WHERE lastName LIKE :lastName")
 public class Author {
 
 	@Id

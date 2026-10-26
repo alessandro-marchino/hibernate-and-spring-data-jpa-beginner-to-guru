@@ -1,5 +1,6 @@
 package guru.springframework.sdjpahibernatedao.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
@@ -15,20 +16,26 @@ public class BookDaoImpl implements BookDao {
 	private final EntityManager em;
 
 	@Override
+	public List<Book> findAll() {
+		TypedQuery<Book> query = em.createNamedQuery("Book.findAll", Book.class);
+		return query.getResultList();
+	}
+
+	@Override
 	public Optional<Book> getById(Long id) {
 		return Optional.ofNullable(em.find(Book.class, id));
 	}
 
 	@Override
 	public Optional<Book> getByTitle(String title) {
-		TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b WHERE b.title = :title", Book.class);
+		TypedQuery<Book> query = em.createNamedQuery("Book.findByTitle", Book.class);
 		query.setParameter("title", title);
 		return query.getResultStream().findFirst();
 	}
 
 	@Override
 	public Optional<Book> findByISBN(String isbn) {
-		TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b WHERE b.isbn = :isbn", Book.class);
+		TypedQuery<Book> query = em.createNamedQuery("Book.findByIsbn", Book.class);
 		query.setParameter("isbn", isbn);
 		return query.getResultStream().findFirst();
 	}

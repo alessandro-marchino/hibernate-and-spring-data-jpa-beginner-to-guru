@@ -2,6 +2,7 @@ package guru.springframework.sdjpahibernatedao.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,13 @@ import guru.springframework.sdjpahibernatedao.domain.Book;
 public class BookDaoImplTest {
 
 	@Autowired BookDao bookDao;
+
+	@Test
+	void testFindAll() {
+		List<Book> books = bookDao.findAll();
+		assertThat(books).isNotEmpty();
+		assertThat(books).hasSize(5);
+	}
 
 	@Test
 	void testGetById() {
