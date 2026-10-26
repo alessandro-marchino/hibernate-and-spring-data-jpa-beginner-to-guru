@@ -3,25 +3,26 @@ package guru.springframework.sdjpaspringdatajpa.dao;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import guru.springframework.sdjpaspringdatajpa.domain.Author;
+import guru.springframework.sdjpaspringdatajpa.repositories.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@EnableJpaRepositories
 @Component
 public class AuthorDaoImpl implements AuthorDao {
+	private final AuthorRepository authorRepository;
 
 	@Override
 	public List<Author> findAll() {
-		throw new UnsupportedOperationException("Not implemented");
+		return authorRepository.findAll();
 	}
 
 	@Override
 	public Optional<Author> getById(Long id) {
-		throw new UnsupportedOperationException("Not implemented");
+		return authorRepository.findById(id);
 	}
 
 	@Override
@@ -45,18 +46,24 @@ public class AuthorDaoImpl implements AuthorDao {
 	}
 
 	@Override
+	@Transactional
 	public Author saveNewAuthor(Author author) {
-		throw new UnsupportedOperationException("Not implemented");
+		return authorRepository.saveAndFlush(author);
 	}
 
 	@Override
+	@Transactional
 	public Author updateAuthor(Author author) {
-		throw new UnsupportedOperationException("Not implemented");
+		Author foundAuthor = authorRepository.findById(author.getId()).orElseThrow();
+		foundAuthor.setFirstName(author.getFirstName());
+		foundAuthor.setLastName(author.getLastName());
+		return authorRepository.saveAndFlush(foundAuthor);
 	}
 
 	@Override
+	@Transactional
 	public void deleteAuthorById(Long id) {
-		throw new UnsupportedOperationException("Not implemented");
+		authorRepository.deleteById(id);
 	}
 
 }
