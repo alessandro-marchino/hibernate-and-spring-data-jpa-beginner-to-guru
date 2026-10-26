@@ -57,4 +57,16 @@ public class BookRepositoryTest {
 		Optional<Book> book = bookRepository.findBooByTitleWithQuery("Clean Code");
 		assertThat(book).isNotEmpty();
 	}
+
+	@Test
+	void testBookQueryNamed() {
+		Optional<Book> book = bookRepository.findByTitleNamed("Clean Code");
+		assertThat(book).isNotEmpty();
+	}
+
+	@Test
+	void testBookQueryNamedImplicit() {
+		Optional<Book> book = bookRepository.jpaNamed("Clean Code");
+		assertThat(book).isNotEmpty();
+	}
 }

@@ -13,10 +13,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 
 import guru.springframework.sdjpaspringdatajpa.domain.Book;
+import guru.springframework.sdjpaspringdatajpa.domain.Book_;
 
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
 
 	Optional<Book> findByTitle(String title);
+
+	@Query(name = Book_.QUERY_BOOK_FIND_BY_TITLE)
+	Optional<Book> findByTitleNamed(@Param("title") String title);
+
+	Optional<Book> jpaNamed(@Param("title") String title);
 
 	@Query(value = "SELECT id, title, isbn, publisher, author_id FROM book WHERE title = :title", nativeQuery = true)
 	Optional<Book> findByTitleNative(@Param("title") String title);
