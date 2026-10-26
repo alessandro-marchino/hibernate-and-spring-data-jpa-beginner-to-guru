@@ -1,6 +1,7 @@
 package guru.springframework.sdjpaspringdatajpa.repositories;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -17,4 +18,6 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
 
 	@NullMarked Book readByTitle(String title);
 	@Nullable Book getByTitle(@Nullable String title);
+
+	Stream<Book> findAllByTitleNotNull();
 }

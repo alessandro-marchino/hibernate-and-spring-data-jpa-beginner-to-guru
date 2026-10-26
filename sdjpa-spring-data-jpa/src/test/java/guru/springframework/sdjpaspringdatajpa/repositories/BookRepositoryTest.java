@@ -1,7 +1,10 @@
 package guru.springframework.sdjpaspringdatajpa.repositories;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +30,12 @@ public class BookRepositoryTest {
 	@Test
 	void testNoException() {
 		assertNull(bookRepository.getByTitle("Foobar4"));
+	}
+
+	@Test
+	void testBookStream() {
+		AtomicInteger count = new AtomicInteger();
+		bookRepository.findAllByTitleNotNull().forEach(_ -> count.incrementAndGet());
+		assertThat(count.get()).isEqualTo(5);
 	}
 }
