@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.sdjpahibernatedao.domain.Book;
+import guru.springframework.sdjpahibernatedao.domain.Book_;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class BookDaoImpl implements BookDao {
 
 	@Override
 	public List<Book> findAll() {
-		TypedQuery<Book> query = em.createNamedQuery("Book.findAll", Book.class);
+		TypedQuery<Book> query = em.createNamedQuery(Book_.QUERY_BOOK_FIND_ALL, Book.class);
 		return query.getResultList();
 	}
 
@@ -28,14 +29,14 @@ public class BookDaoImpl implements BookDao {
 
 	@Override
 	public Optional<Book> getByTitle(String title) {
-		TypedQuery<Book> query = em.createNamedQuery("Book.findByTitle", Book.class);
+		TypedQuery<Book> query = em.createNamedQuery(Book_.QUERY_BOOK_FIND_BY_TITLE, Book.class);
 		query.setParameter("title", title);
 		return query.getResultStream().findFirst();
 	}
 
 	@Override
 	public Optional<Book> findByISBN(String isbn) {
-		TypedQuery<Book> query = em.createNamedQuery("Book.findByIsbn", Book.class);
+		TypedQuery<Book> query = em.createNamedQuery(Book_.QUERY_BOOK_FIND_BY_ISBN, Book.class);
 		query.setParameter("isbn", isbn);
 		return query.getResultStream().findFirst();
 	}

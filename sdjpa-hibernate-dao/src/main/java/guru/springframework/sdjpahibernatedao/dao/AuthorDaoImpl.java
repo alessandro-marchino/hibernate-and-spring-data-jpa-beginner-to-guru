@@ -7,8 +7,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.sdjpahibernatedao.domain.Author;
+import guru.springframework.sdjpahibernatedao.domain.Author_;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -19,7 +23,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public List<Author> findAll() {
-		TypedQuery<Author> query = entityManager.createNamedQuery("Author.findAll", Author.class);
+		TypedQuery<Author> query = entityManager.createNamedQuery(Author_.QUERY_AUTHOR_FIND_ALL, Author.class);
 		return query.getResultList();
 	}
 
@@ -30,15 +34,31 @@ public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Optional<Author> findAuthorByName(String firstName, String lastName) {
-		TypedQuery<Author> query = entityManager.createNamedQuery("Author.findByName", Author.class);
+		TypedQuery<Author> query = entityManager.createNamedQuery(Author_.QUERY_AUTHOR_FIND_BY_NAME, Author.class);
 		query.setParameter("firstName", firstName);
 		query.setParameter("lastName", lastName);
 		return query.getResultStream().findFirst();
 	}
 
 	@Override
+	public Optional<Author> findAuthorByNameCriteria(String firstName, String lastName) {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Author> cq = cb.createQuery(Author.class);
+		Root<Author> root = cq.from(Author.class);
+		cq = cq.select(root)
+		.where(
+			cb.and(
+				cb.equal(root.get(Author_.firstName), firstName),
+				cb.equal(root.get(Author_.lastName), lastName)
+			)
+		);
+		TypedQuery<Author> query = entityManager.createQuery(cq);
+		return query.getResultStream().findFirst();
+	}
+
+	@Override
 	public List<Author> listAuthorByLastNameLike(String lastName) {
-		TypedQuery<Author> query = entityManager.createNamedQuery("Author.findByLastName", Author.class);
+		TypedQuery<Author> query = entityManager.createNamedQuery(Author_.QUERY_AUTHOR_FIND_BY_LAST_NAME, Author.class);
 		query.setParameter("lastName", lastName + "%");
 		return query.getResultList();
 	}
