@@ -9,6 +9,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 
 import guru.springframework.sdjpaspringdatajpa.domain.Book;
@@ -27,6 +28,6 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
 
 	@Async Future<Book> queryByTitle(String title);
 
-	@Query("FROM Book WHERE title = ?1")
-	Optional<Book> findBooByTitleWithQuery(String title);
+	@Query("FROM Book WHERE title = :title")
+	Optional<Book> findBooByTitleWithQuery(@Param("title") String title);
 }
