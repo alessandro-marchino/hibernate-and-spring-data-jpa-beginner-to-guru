@@ -141,4 +141,5 @@ public class BookDaoImplTest {
 		// Assert not throws
 		bookDao.deleteById(999L);
 	}
+
 }
