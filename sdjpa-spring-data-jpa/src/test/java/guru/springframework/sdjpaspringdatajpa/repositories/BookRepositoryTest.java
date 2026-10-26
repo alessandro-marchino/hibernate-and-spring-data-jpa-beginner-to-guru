@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,5 +50,11 @@ public class BookRepositoryTest {
 		Future<Book> bookFuture = bookRepository.queryByTitle("Clean Code");
 		Book book = bookFuture.get();
 		assertNotNull(book);
+	}
+
+	@Test
+	void testBookQuery() {
+		Optional<Book> book = bookRepository.findBooByTitleWithQuery("Clean Code");
+		assertThat(book).isNotEmpty();
 	}
 }
