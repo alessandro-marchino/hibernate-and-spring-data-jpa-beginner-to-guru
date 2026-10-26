@@ -37,7 +37,7 @@ public class BookDaoImpl implements BookDao {
 
 	@Override
 	public Optional<Book> getByTitleNative(String title) {
-		throw new UnsupportedOperationException("Not implemented");
+		return bookRepository.findByTitleNative(title);
 	}
 
 	@Override

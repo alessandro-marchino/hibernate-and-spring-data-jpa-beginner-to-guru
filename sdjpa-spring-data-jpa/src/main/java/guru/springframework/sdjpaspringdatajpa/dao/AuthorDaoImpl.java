@@ -41,12 +41,12 @@ public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Optional<Author> findAuthorByNameNative(String firstName, String lastName) {
-		throw new UnsupportedOperationException("Not implemented");
+		return authorRepository.findByNameNative(firstName, lastName);
 	}
 
 	@Override
 	public List<Author> listAuthorByLastNameLike(String lastName) {
-		throw new UnsupportedOperationException("Not implemented");
+		return authorRepository.findAllByLastNameContaining(lastName);
 	}
 
 	@Override

@@ -18,6 +18,9 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
 
 	Optional<Book> findByTitle(String title);
 
+	@Query(value = "SELECT id, title, isbn, publisher, author_id FROM book WHERE title = :title", nativeQuery = true)
+	Optional<Book> findByTitleNative(@Param("title") String title);
+
 	Optional<Book> findByIsbn(String isbn);
 
 	@NullMarked Book readByTitle(String title);
