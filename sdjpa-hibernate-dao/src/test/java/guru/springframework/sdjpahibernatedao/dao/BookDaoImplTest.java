@@ -65,6 +65,17 @@ public class BookDaoImplTest {
 	}
 
 	@Test
+	void testGetByTitleNative() {
+		Optional<Book> book = bookDao.getByTitleNative("Domain-Driven Design");
+		assertThat(book).isNotEmpty();
+		assertThat(book.get().getId()).isEqualTo(4L);
+		assertThat(book.get().getTitle()).isEqualTo("Domain-Driven Design");
+		assertThat(book.get().getPublisher()).isEqualTo("Addison Wesley");
+		assertThat(book.get().getIsbn()).isEqualTo("978-0321125217");
+		assertThat(book.get().getAuthorId()).isEqualTo(2L);
+	}
+
+	@Test
 	void testGetByTitleNotFound() {
 		Optional<Book> book = bookDao.getByTitle("My book");
 		assertThat(book).isEmpty();
