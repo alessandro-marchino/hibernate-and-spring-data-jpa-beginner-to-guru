@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import guru.springframework.sdjpaspringdatajpa.domain.Author;
+import guru.springframework.sdjpaspringdatajpa.domain.Author_;
 import guru.springframework.sdjpaspringdatajpa.repositories.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +33,10 @@ public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Optional<Author> findAuthorByNameCriteria(String firstName, String lastName) {
-		throw new UnsupportedOperationException("Not implemented");
+		return authorRepository.findOne((author, cq, cb) -> cb.and(
+			cb.equal(author.get(Author_.firstName), firstName),
+			cb.equal(author.get(Author_.lastName), lastName)
+		));
 	}
 
 	@Override

@@ -6,30 +6,33 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.sdjpaspringdatajpa.domain.Book;
+import guru.springframework.sdjpaspringdatajpa.domain.Book_;
+import guru.springframework.sdjpaspringdatajpa.repositories.BookRepository;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class BookDaoImpl implements BookDao {
+	private final BookRepository bookRepository;
 
 	@Override
 	public List<Book> findAll() {
-		throw new UnsupportedOperationException("Not implemented");
+		return bookRepository.findAll();
 	}
 
 	@Override
 	public Optional<Book> getById(Long id) {
-		throw new UnsupportedOperationException("Not implemented");
+		return bookRepository.findById(id);
 	}
 
 	@Override
 	public Optional<Book> getByTitle(String title) {
-		throw new UnsupportedOperationException("Not implemented");
+		return bookRepository.findByTitle(title);
 	}
 
 	@Override
 	public Optional<Book> getByTitleCriteria(String title) {
-		throw new UnsupportedOperationException("Not implemented");
+		return bookRepository.findOne((book, cq, cb) -> cb.equal(book.get(Book_.title), title));
 	}
 
 	@Override
@@ -39,22 +42,27 @@ public class BookDaoImpl implements BookDao {
 
 	@Override
 	public Optional<Book> findByISBN(String isbn) {
-		throw new UnsupportedOperationException("Not implemented");
+		return bookRepository.findByIsbn(isbn);
 	}
 
 	@Override
 	public Book save(Book dto) {
-		throw new UnsupportedOperationException("Not implemented");
+		return bookRepository.save(dto);
 	}
 
 	@Override
 	public Book update(Book dto) {
-		throw new UnsupportedOperationException("Not implemented");
+		Book saved = bookRepository.findById(dto.getId()).orElseThrow();
+		saved.setAuthorId(dto.getAuthorId());
+		saved.setIsbn(dto.getIsbn());
+		saved.setPublisher(dto.getPublisher());
+		saved.setTitle(dto.getTitle());
+		return bookRepository.saveAndFlush(saved);
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		throw new UnsupportedOperationException("Not implemented");
+		bookRepository.deleteById(id);
 	}
 
 }

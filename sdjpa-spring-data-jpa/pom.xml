@@ -12,20 +12,6 @@
 	<artifactId>sdjpa-spring-data-jpa</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>sdjpa-spring-data-jpa</name>
-	<description/>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
 	<properties>
 		<java.version>25</java.version>
 	</properties>
@@ -45,6 +31,12 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-processor</artifactId>
+			<version>${hibernate.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -92,6 +84,11 @@
 						</goals>
 						<configuration>
 							<annotationProcessorPaths>
+								<path>
+									<groupId>org.hibernate.orm</groupId>
+									<artifactId>hibernate-processor</artifactId>
+									<version>${hibernate.version}</version>
+								</path>
 								<path>
 									<groupId>org.projectlombok</groupId>
 									<artifactId>lombok</artifactId>

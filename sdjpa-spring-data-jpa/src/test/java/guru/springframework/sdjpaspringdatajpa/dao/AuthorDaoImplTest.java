@@ -66,12 +66,11 @@ public class AuthorDaoImplTest {
 
 	@Test
 	void testGetByNameCriteria() {
-		// TODO
-		// Optional<Author> author = authorDao.findAuthorByNameCriteria("Craig", "Walls");
-		// assertThat(author).isNotEmpty();
-		// assertThat(author.get().getId()).isEqualTo(1L);
-		// assertThat(author.get().getFirstName()).isEqualTo("Craig");
-		// assertThat(author.get().getLastName()).isEqualTo("Walls");
+		Optional<Author> author = authorDao.findAuthorByNameCriteria("Craig", "Walls");
+		assertThat(author).isNotEmpty();
+		assertThat(author.get().getId()).isEqualTo(1L);
+		assertThat(author.get().getFirstName()).isEqualTo("Craig");
+		assertThat(author.get().getLastName()).isEqualTo("Walls");
 	}
 
 	@Test
