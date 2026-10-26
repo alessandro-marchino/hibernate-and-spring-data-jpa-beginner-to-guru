@@ -73,6 +73,15 @@ public class AuthorDaoImplTest {
 	}
 
 	@Test
+	void testGetByNameNative() {
+		Optional<Author> author = authorDao.findAuthorByNameNative("Craig", "Walls");
+		assertThat(author).isNotEmpty();
+		assertThat(author.get().getId()).isEqualTo(1L);
+		assertThat(author.get().getFirstName()).isEqualTo("Craig");
+		assertThat(author.get().getLastName()).isEqualTo("Walls");
+	}
+
+	@Test
 	void testSave() {
 		Author author = authorDao.saveNewAuthor(Author.builder().firstName("John").lastName("Thompson").build());
 		assertThat(author).isNotNull();

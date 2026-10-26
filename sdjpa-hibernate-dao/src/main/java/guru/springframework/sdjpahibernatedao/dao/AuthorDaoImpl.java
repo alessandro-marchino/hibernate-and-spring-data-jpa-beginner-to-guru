@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import guru.springframework.sdjpahibernatedao.domain.Author;
 import guru.springframework.sdjpahibernatedao.domain.Author_;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -53,6 +54,15 @@ public class AuthorDaoImpl implements AuthorDao {
 			)
 		);
 		TypedQuery<Author> query = entityManager.createQuery(cq);
+		return query.getResultStream().findFirst();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public Optional<Author> findAuthorByNameNative(String firstName, String lastName) {
+		Query query = entityManager.createNativeQuery("SELECT * FROM author a WHERE a.first_name = :firstName AND a.last_name = :lastName", Author.class);
+		query.setParameter("firstName", firstName);
+		query.setParameter("lastName", lastName);
 		return query.getResultStream().findFirst();
 	}
 
