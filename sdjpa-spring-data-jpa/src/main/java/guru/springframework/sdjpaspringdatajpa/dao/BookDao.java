@@ -3,12 +3,15 @@ package guru.springframework.sdjpaspringdatajpa.dao;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
+
 import guru.springframework.sdjpaspringdatajpa.domain.Book;
 
 public interface BookDao {
 
 	List<Book> findAll();
 	List<Book> findAll(int pageSize, int offset);
+	List<Book> findAll(Pageable pageable);
 	Optional<Book> getById(Long id);
 	Optional<Book> getByTitle(String title);
 	Optional<Book> getByTitleCriteria(String title);

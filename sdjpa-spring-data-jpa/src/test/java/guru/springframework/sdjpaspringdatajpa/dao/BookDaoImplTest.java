@@ -11,6 +11,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
 
 import guru.springframework.sdjpaspringdatajpa.domain.Book;
 
@@ -52,6 +53,33 @@ public class BookDaoImplTest {
 	@Test
 	void testFindAllPage10() {
 		List<Book> books = bookDao.findAll(2, 20);
+		assertThat(books).isEmpty();
+	}
+
+	@Test
+	void testFindAllPageable1() {
+		List<Book> books = bookDao.findAll(PageRequest.of(0, 2));
+		assertThat(books).isNotEmpty();
+		assertThat(books).hasSize(2);
+	}
+
+	@Test
+	void testFindAllPageable2() {
+		List<Book> books = bookDao.findAll(PageRequest.of(1, 2));
+		assertThat(books).isNotEmpty();
+		assertThat(books).hasSize(2);
+	}
+
+	@Test
+	void testFindAllPageable3() {
+		List<Book> books = bookDao.findAll(PageRequest.of(2, 2));
+		assertThat(books).isNotEmpty();
+		assertThat(books).hasSize(1);
+	}
+
+	@Test
+	void testFindAllPageable10() {
+		List<Book> books = bookDao.findAll(PageRequest.of(9, 2));
 		assertThat(books).isEmpty();
 	}
 

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.sdjpaspringdatajpa.domain.Book;
@@ -26,6 +27,12 @@ public class BookDaoImpl implements BookDao {
 	@Override
 	public List<Book> findAll(int pageSize, int offset) {
 		return bookRepository.findAll(PageRequest.of((int)Math.floor(offset / pageSize), pageSize))
+			.toList();
+	}
+
+	@Override
+	public List<Book> findAll(Pageable pageable) {
+		return bookRepository.findAll(pageable)
 			.toList();
 	}
 

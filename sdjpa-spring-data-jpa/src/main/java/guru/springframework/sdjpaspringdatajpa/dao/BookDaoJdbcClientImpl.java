@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -33,6 +34,15 @@ public class BookDaoJdbcClientImpl implements BookDao {
 		return jdbcClient.sql("SELECT * FROM book LIMIT :limit OFFSET :offset")
 			.param("limit", pageSize)
 			.param("offset", offset)
+			.query(bookMapper)
+			.list();
+	}
+
+	@Override
+	public List<Book> findAll(Pageable pageable) {
+		return jdbcClient.sql("SELECT * FROM book LIMIT :limit OFFSET :offset")
+			.param("limit", pageable.getPageSize())
+			.param("offset", pageable.getOffset())
 			.query(bookMapper)
 			.list();
 	}
