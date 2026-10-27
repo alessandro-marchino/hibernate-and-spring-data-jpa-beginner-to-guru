@@ -3,6 +3,7 @@ package guru.springframework.sdjpaspringdatajpa.dao;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,11 @@ public class AuthorDaoImpl implements AuthorDao {
 	@Override
 	public List<Author> findAll() {
 		return authorRepository.findAll();
+	}
+
+	@Override
+	public List<Author> findAllByLastNameSortByFirstName(String lastName, Pageable pageable) {
+		return authorRepository.findAllByLastName(lastName, pageable);
 	}
 
 	@Override

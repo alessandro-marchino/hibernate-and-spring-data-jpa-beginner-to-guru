@@ -11,6 +11,9 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.transaction.annotation.Transactional;
 
 import guru.springframework.sdjpaspringdatajpa.domain.Author;
@@ -29,6 +32,42 @@ public class AuthorDaoImplTest {
 	}
 
 	@Test
+	void testFindAllByLastName() {
+		List<Author> authors = authorDao.findAllByLastNameSortByFirstName("Smith", PageRequest.of(0, 10, Sort.by(Direction.ASC, Author::getFirstName)));
+		assertThat(authors).isNotEmpty();
+		assertThat(authors).hasSize(10);
+		assertThat(authors.getFirst().getFirstName()).isLessThanOrEqualTo(authors.getLast().getFirstName());
+	}
+
+	@Test
+	void testFindAllByLastNameWithoutSorting() {
+		List<Author> authors = authorDao.findAllByLastNameSortByFirstName("Smith", PageRequest.of(0, 10));
+		assertThat(authors).isNotEmpty();
+		assertThat(authors).hasSize(10);
+	}
+
+	@Test
+	void testFindAllByLastNameSortingDesc() {
+		List<Author> authors = authorDao.findAllByLastNameSortByFirstName("Smith", PageRequest.of(0, 10, Sort.by(Direction.DESC, Author::getFirstName)));
+		assertThat(authors).isNotEmpty();
+		assertThat(authors).hasSize(10);
+		assertThat(authors.getFirst().getFirstName()).isGreaterThanOrEqualTo(authors.getLast().getFirstName());
+	}
+
+	@Test
+	void testFindAllByLastNameEmptyPage() {
+		List<Author> authors = authorDao.findAllByLastNameSortByFirstName("Smith", PageRequest.of(10, 10, Sort.by(Direction.ASC, Author::getFirstName)));
+		assertThat(authors).isEmpty();
+	}
+
+	@Test
+	void testFindAllByLastNameNoRecords() {
+		List<Author> authors = authorDao.findAllByLastNameSortByFirstName("Smithsonian", PageRequest.of(0, 10, Sort.by(Direction.ASC, Author::getFirstName)));
+		assertThat(authors).isEmpty();
+	}
+
+
+	@Test
 	void testGetById() {
 		Optional<Author> author = authorDao.getById(1L);
 		assertThat(author).isNotEmpty();
@@ -38,7 +77,7 @@ public class AuthorDaoImplTest {
 
 	@Test
 	void testGetByIdNotFound() {
-		Optional<Author> author = authorDao.getById(100L);
+		Optional<Author> author = authorDao.getById(999L);
 		assertThat(author).isEmpty();
 	}
 

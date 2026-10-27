@@ -3,6 +3,8 @@ package guru.springframework.sdjpaspringdatajpa.dao;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
+
 import guru.springframework.sdjpaspringdatajpa.domain.Author;
 
 public interface AuthorDao {
@@ -24,4 +26,6 @@ public interface AuthorDao {
 	List<Author> listAuthorByLastNameLike(String lastName);
 
 	List<Author> findAll();
+
+	List<Author> findAllByLastNameSortByFirstName(String lastName, Pageable pageable);
 }
