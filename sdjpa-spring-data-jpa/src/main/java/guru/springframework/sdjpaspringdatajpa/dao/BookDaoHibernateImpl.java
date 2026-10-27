@@ -44,8 +44,12 @@ public class BookDaoHibernateImpl implements BookDao {
 
 	@Override
 	public List<Book> findAllSortByTitle(Pageable pageable) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'findAllSortByTitle'");
+		String jpql = "FROM Book ORDER BY title " + pageable.getSort().getOrderFor(Book_.TITLE).getDirection();
+
+		TypedQuery<Book> query = em.createQuery(jpql, Book.class);
+		query.setFirstResult(Math.toIntExact(pageable.getOffset()));
+		query.setMaxResults(Math.toIntExact(pageable.getPageSize()));
+		return query.getResultList();
 	}
 
 	@Override
