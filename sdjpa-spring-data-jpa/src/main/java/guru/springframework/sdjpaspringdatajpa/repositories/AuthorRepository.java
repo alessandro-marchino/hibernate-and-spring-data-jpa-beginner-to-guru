@@ -3,6 +3,7 @@ package guru.springframework.sdjpaspringdatajpa.repositories;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -16,7 +17,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long>, JpaSpecif
 
 	List<Author> findAllByLastNameContaining(String lastName);
 
-	List<Author> findAllByLastName(String lastName, Pageable pageable);
+	Page<Author> findAllByLastName(String lastName, Pageable pageable);
 
 	@Query(value = "SELECT id, first_name, last_name FROM author WHERE first_name = :firstName AND last_name = :lastName", nativeQuery = true)
 	Optional<Author> findByNameNative(@Param("firstName") String firstName, @Param("lastName") String lastName);
