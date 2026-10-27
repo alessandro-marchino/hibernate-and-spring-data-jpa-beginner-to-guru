@@ -12,6 +12,8 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 import guru.springframework.sdjpaspringdatajpa.domain.Book;
 
@@ -81,6 +83,22 @@ public class BookDaoImplTest {
 	void testFindAllPageable10() {
 		List<Book> books = bookDao.findAll(PageRequest.of(9, 2));
 		assertThat(books).isEmpty();
+	}
+
+	@Test
+	void testFindAllSortByTitle() {
+		List<Book> books = bookDao.findAllSortByTitle(PageRequest.of(0, 10, Sort.by(Book::getTitle)));
+		assertThat(books).isNotEmpty();
+		assertThat(books).hasSize(5);
+		assertThat(books.getFirst().getTitle()).isLessThan(books.getLast().getTitle());
+	}
+
+	@Test
+	void testFindAllSortByTitleDesc() {
+		List<Book> books = bookDao.findAllSortByTitle(PageRequest.of(0, 10, Sort.by(Direction.DESC, Book::getTitle)));
+		assertThat(books).isNotEmpty();
+		assertThat(books).hasSize(5);
+		assertThat(books.getFirst().getTitle()).isGreaterThan(books.getLast().getTitle());
 	}
 
 	@Test

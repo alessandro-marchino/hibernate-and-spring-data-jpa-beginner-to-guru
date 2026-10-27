@@ -37,6 +37,12 @@ public class BookDaoImpl implements BookDao {
 	}
 
 	@Override
+	public List<Book> findAllSortByTitle(Pageable pageable) {
+		return bookRepository.findAll(pageable)
+			.toList();
+	}
+
+	@Override
 	public Optional<Book> getById(Long id) {
 		return bookRepository.findById(id);
 	}
