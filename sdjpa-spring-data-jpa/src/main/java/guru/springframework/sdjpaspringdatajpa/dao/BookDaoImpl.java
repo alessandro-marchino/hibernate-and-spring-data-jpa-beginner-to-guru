@@ -3,6 +3,7 @@ package guru.springframework.sdjpaspringdatajpa.dao;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.sdjpaspringdatajpa.domain.Book;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
+@Primary
 public class BookDaoImpl implements BookDao {
 	private final BookRepository bookRepository;
 
