@@ -17,7 +17,9 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedQuery(name = "Book.findAll", query = "FROM Book")
 @NamedQuery(name = "Book.findByTitle", query = "FROM Book WHERE title = :title")
+@NamedQuery(name = "Book.findByIsbn", query = "FROM Book WHERE isbn = :isbn")
 @NamedQuery(name = "Book.jpaNamed", query = "FROM Book WHERE title = :title")
 public class Book {
 
