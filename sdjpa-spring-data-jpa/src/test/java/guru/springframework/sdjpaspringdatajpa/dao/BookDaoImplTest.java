@@ -29,6 +29,33 @@ public class BookDaoImplTest {
 	}
 
 	@Test
+	void testFindAllPage1() {
+		List<Book> books = bookDao.findAll(2, 0);
+		assertThat(books).isNotEmpty();
+		assertThat(books).hasSize(2);
+	}
+
+	@Test
+	void testFindAllPage2() {
+		List<Book> books = bookDao.findAll(2, 2);
+		assertThat(books).isNotEmpty();
+		assertThat(books).hasSize(2);
+	}
+
+	@Test
+	void testFindAllPage3() {
+		List<Book> books = bookDao.findAll(2, 4);
+		assertThat(books).isNotEmpty();
+		assertThat(books).hasSize(1);
+	}
+
+	@Test
+	void testFindAllPage10() {
+		List<Book> books = bookDao.findAll(2, 20);
+		assertThat(books).isEmpty();
+	}
+
+	@Test
 	void testGetById() {
 		Optional<Book> book = bookDao.getById(1L);
 		assertThat(book).isNotEmpty();

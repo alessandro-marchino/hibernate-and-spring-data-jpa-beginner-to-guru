@@ -29,6 +29,15 @@ public class BookDaoJdbcClientImpl implements BookDao {
 	}
 
 	@Override
+	public List<Book> findAll(int pageSize, int offset) {
+		return jdbcClient.sql("SELECT * FROM book LIMIT :limit OFFSET :offset")
+			.param("limit", pageSize)
+			.param("offset", offset)
+			.query(bookMapper)
+			.list();
+	}
+
+	@Override
 	public Optional<Book> getById(Long id) {
 		return jdbcClient.sql("SELECT * FROM book WHERE id = :id")
 			.param("id", id)

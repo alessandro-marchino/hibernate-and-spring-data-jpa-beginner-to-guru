@@ -8,6 +8,7 @@ import guru.springframework.sdjpaspringdatajpa.domain.Book;
 public interface BookDao {
 
 	List<Book> findAll();
+	List<Book> findAll(int pageSize, int offset);
 	Optional<Book> getById(Long id);
 	Optional<Book> getByTitle(String title);
 	Optional<Book> getByTitleCriteria(String title);
