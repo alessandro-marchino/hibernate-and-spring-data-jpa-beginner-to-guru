@@ -28,14 +28,18 @@ public class BookDaoHibernateImpl implements BookDao {
 
 	@Override
 	public List<Book> findAll(int pageSize, int offset) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+		TypedQuery<Book> query = em.createNamedQuery(Book_.QUERY_BOOK_FIND_ALL, Book.class);
+		query.setFirstResult(offset);
+		query.setMaxResults(pageSize);
+		return query.getResultList();
 	}
 
 	@Override
 	public List<Book> findAll(Pageable pageable) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+		TypedQuery<Book> query = em.createNamedQuery(Book_.QUERY_BOOK_FIND_ALL, Book.class);
+		query.setFirstResult(Math.toIntExact(pageable.getOffset()));
+		query.setMaxResults(Math.toIntExact(pageable.getPageSize()));
+		return query.getResultList();
 	}
 
 	@Override
