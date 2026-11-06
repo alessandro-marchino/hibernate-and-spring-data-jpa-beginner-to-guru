@@ -55,16 +55,15 @@ public class OrderHeaderRepositoryTest {
 	@Test
 	void testInsertWithLine() {
 		Product product = createProduct();
-		OrderHeader saved = repository.save(OrderHeader.builder()
+		OrderHeader oh = OrderHeader.builder()
 			.customerName("My test customer")
 			.orderStatus(OrderStatus.NEW)
-			.orderLines(Set.of(
-				OrderLine.builder()
-					.product(product)
-					.quantityOrdered(5)
-					.build()
-			))
+			.build();
+		oh.addOrderLine(OrderLine.builder()
+			.product(product)
+			.quantityOrdered(5)
 			.build());
+		OrderHeader saved = repository.save(oh);
 		assertThat(saved).isNotNull();
 		assertThat(saved.getId()).isGreaterThan(5L);
 		assertThat(saved.getCustomerName()).isEqualTo("My test customer");
