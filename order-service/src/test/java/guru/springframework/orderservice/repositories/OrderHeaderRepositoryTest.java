@@ -15,11 +15,13 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import guru.springframework.orderservice.domain.OrderHeader;
 import guru.springframework.orderservice.domain.OrderLine;
 import guru.springframework.orderservice.domain.OrderStatus;
+import guru.springframework.orderservice.domain.Product;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class OrderHeaderRepositoryTest {
 	@Autowired OrderHeaderRepository repository;
+	@Autowired ProductRepository productRepository;
 
 	@Test
 	void testFindAll() {
@@ -52,11 +54,13 @@ public class OrderHeaderRepositoryTest {
 
 	@Test
 	void testInsertWithLine() {
+		Product product = createProduct();
 		OrderHeader saved = repository.save(OrderHeader.builder()
 			.customerName("My test customer")
 			.orderStatus(OrderStatus.NEW)
 			.orderLines(Set.of(
 				OrderLine.builder()
+					.product(product)
 					.quantityOrdered(5)
 					.build()
 			))
@@ -95,5 +99,9 @@ public class OrderHeaderRepositoryTest {
 
 		Optional<OrderHeader> res = repository.findById(saved.getId());
 		assertThat(res).isEmpty();
+	}
+
+	private Product createProduct() {
+		return productRepository.saveAndFlush(Product.builder().description("Test Product").build());
 	}
 }

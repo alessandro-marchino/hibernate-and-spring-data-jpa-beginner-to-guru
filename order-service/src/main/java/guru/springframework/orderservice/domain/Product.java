@@ -1,14 +1,18 @@
 package guru.springframework.orderservice.domain;
 
+import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -24,4 +28,7 @@ public class Product extends BaseEntity {
 	private String description;
 	@Enumerated(EnumType.STRING)
 	private ProductStatus productStatus;
+	@OneToMany(mappedBy = "product")
+	@ToString.Exclude
+	private Set<OrderLine> orderLines;
 }

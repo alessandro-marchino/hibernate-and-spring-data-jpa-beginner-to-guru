@@ -23,4 +23,7 @@ public class OrderLine extends BaseEntity {
 	private Integer quantityOrdered;
 	@ManyToOne
 	private OrderHeader orderHeader;
+
+	@ManyToOne
+	private Product product;
 }
