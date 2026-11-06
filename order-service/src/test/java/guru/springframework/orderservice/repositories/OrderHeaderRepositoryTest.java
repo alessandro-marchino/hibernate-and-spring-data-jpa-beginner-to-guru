@@ -44,6 +44,7 @@ public class OrderHeaderRepositoryTest {
 		assertThat(saved).isNotNull();
 		assertThat(saved.getId()).isGreaterThan(5L);
 		assertThat(saved.getCustomerName()).isEqualTo("My test customer");
+		assertThat(saved.getCreatedDate()).isNotNull();
 	}
 
 	@Test
