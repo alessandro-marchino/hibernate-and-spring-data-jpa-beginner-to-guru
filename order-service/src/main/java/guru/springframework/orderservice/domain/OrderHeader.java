@@ -1,16 +1,20 @@
 package guru.springframework.orderservice.domain;
 
+import java.util.Set;
+
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -37,4 +41,7 @@ public class OrderHeader extends BaseEntity {
 	private Address billToAddress;
 	@Enumerated(EnumType.STRING)
 	private OrderStatus orderStatus;
+	@OneToMany(mappedBy = "orderHeader")
+	@ToString.Exclude
+	private Set<OrderLine> orderLines;
 }

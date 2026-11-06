@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace;
 
 import guru.springframework.orderservice.domain.OrderHeader;
+import guru.springframework.orderservice.domain.OrderLine;
 import guru.springframework.orderservice.domain.OrderStatus;
 
 @DataJpaTest
@@ -46,6 +48,26 @@ public class OrderHeaderRepositoryTest {
 		assertThat(saved.getCustomerName()).isEqualTo("My test customer");
 		assertThat(saved.getCreatedDate()).isNotNull();
 		assertThat(saved.getLastModifiedDate()).isNotNull();
+	}
+
+	@Test
+	void testInsertWithLine() {
+		OrderHeader saved = repository.save(OrderHeader.builder()
+			.customerName("My test customer")
+			.orderStatus(OrderStatus.NEW)
+			.orderLines(Set.of(
+				OrderLine.builder()
+					.quantityOrdered(5)
+					.build()
+			))
+			.build());
+		assertThat(saved).isNotNull();
+		assertThat(saved.getId()).isGreaterThan(5L);
+		assertThat(saved.getCustomerName()).isEqualTo("My test customer");
+		assertThat(saved.getCreatedDate()).isNotNull();
+		assertThat(saved.getLastModifiedDate()).isNotNull();
+
+		assertThat(saved.getOrderLines()).hasSize(1);
 	}
 
 	@Test
