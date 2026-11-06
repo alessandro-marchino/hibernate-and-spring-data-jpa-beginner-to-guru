@@ -12,6 +12,7 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace;
 
 import guru.springframework.orderservice.domain.Customer;
+import guru.springframework.orderservice.domain.OrderApproval;
 import guru.springframework.orderservice.domain.OrderHeader;
 import guru.springframework.orderservice.domain.OrderLine;
 import guru.springframework.orderservice.domain.OrderStatus;
@@ -23,6 +24,7 @@ public class OrderHeaderRepositoryTest {
 	@Autowired OrderHeaderRepository repository;
 	@Autowired ProductRepository productRepository;
 	@Autowired CustomerRepository customerRepository;
+	@Autowired OrderApprovalRepository orderApprovalRepository;
 
 	@Test
 	void testFindAll() {
@@ -58,9 +60,12 @@ public class OrderHeaderRepositoryTest {
 	void testInsertWithLine() {
 		Product product = createProduct();
 		Customer customer = createCustomer();
+		OrderApproval approval = createApproval();
+
 		OrderHeader oh = OrderHeader.builder()
 			.customer(customer)
 			.orderStatus(OrderStatus.NEW)
+			.orderApproval(approval)
 			.build();
 		oh.addOrderLine(OrderLine.builder()
 			.product(product)
@@ -74,6 +79,7 @@ public class OrderHeaderRepositoryTest {
 		assertThat(saved.getLastModifiedDate()).isNotNull();
 
 		assertThat(saved.getOrderLines()).hasSize(1);
+		assertThat(saved.getOrderApproval().getId()).isEqualTo(approval.getId());
 	}
 
 	@Test
@@ -115,5 +121,9 @@ public class OrderHeaderRepositoryTest {
 
 	private Customer createCustomer() {
 		return customerRepository.saveAndFlush(Customer.builder().customerName("My test customer").build());
+	}
+
+	private OrderApproval createApproval() {
+		return orderApprovalRepository.saveAndFlush(OrderApproval.builder().approvedBy("Me").build());
 	}
 }

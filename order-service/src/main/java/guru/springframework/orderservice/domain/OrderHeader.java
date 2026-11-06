@@ -11,6 +11,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -48,6 +49,8 @@ public class OrderHeader extends BaseEntity {
 	private Set<OrderLine> orderLines;
 	@ManyToOne
 	private Customer customer;
+	@OneToOne
+	private OrderApproval orderApproval;
 
 	public void addOrderLine(OrderLine orderLine) {
 		if(orderLines == null) {
