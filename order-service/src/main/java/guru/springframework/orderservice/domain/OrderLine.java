@@ -19,6 +19,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class OrderLine extends BaseEntity {
+	@EqualsAndHashCode.Include
 	private Integer quantityOrdered;
 	@ManyToOne
 	private OrderHeader orderHeader;
