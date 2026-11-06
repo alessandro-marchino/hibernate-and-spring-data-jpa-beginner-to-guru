@@ -12,6 +12,7 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace;
 
 import guru.springframework.orderservice.domain.OrderHeader;
+import guru.springframework.orderservice.domain.OrderStatus;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -39,7 +40,7 @@ public class OrderHeaderRepositoryTest {
 
 	@Test
 	void testInsert() {
-		OrderHeader saved = repository.save(OrderHeader.builder().customerName("My test customer").build());
+		OrderHeader saved = repository.save(OrderHeader.builder().customerName("My test customer").orderStatus(OrderStatus.NEW).build());
 		assertThat(saved).isNotNull();
 		assertThat(saved.getId()).isGreaterThan(5L);
 		assertThat(saved.getCustomerName()).isEqualTo("My test customer");
