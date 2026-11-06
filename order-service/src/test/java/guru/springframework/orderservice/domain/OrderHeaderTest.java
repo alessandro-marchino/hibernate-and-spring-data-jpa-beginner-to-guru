@@ -14,8 +14,8 @@ public class OrderHeaderTest {
 
 	@Test
 	void testEqualsIgnoreCustomerName() {
-		assertThat(OrderHeader.builder().id(1L).customerName("Customer 1").build())
-			.isEqualTo(OrderHeader.builder().id(1L).customerName("Customer 2").build());
+		assertThat(OrderHeader.builder().id(1L).customer(Customer.builder().customerName("Customer 1").build()).build())
+			.isEqualTo(OrderHeader.builder().id(1L).customer(Customer.builder().customerName("Customer 2").build()).build());
 	}
 
 	@Test

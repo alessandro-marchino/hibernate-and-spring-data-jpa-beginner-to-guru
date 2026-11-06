@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -38,8 +39,6 @@ import lombok.experimental.SuperBuilder;
 @AttributeOverride(name = "billToAddress.zipCode", column = @Column(name = "bill_to_zip_code"))
 public class OrderHeader extends BaseEntity {
 
-	@EqualsAndHashCode.Include
-	private String customerName;
 	private Address shippingAddress;
 	private Address billToAddress;
 	@Enumerated(EnumType.STRING)
@@ -47,6 +46,8 @@ public class OrderHeader extends BaseEntity {
 	@OneToMany(mappedBy = "orderHeader", cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE })
 	@ToString.Exclude
 	private Set<OrderLine> orderLines;
+	@ManyToOne
+	private Customer customer;
 
 	public void addOrderLine(OrderLine orderLine) {
 		if(orderLines == null) {
