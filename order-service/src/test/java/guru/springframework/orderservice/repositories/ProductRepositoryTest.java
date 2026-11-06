@@ -78,4 +78,19 @@ public class ProductRepositoryTest {
 		Optional<Product> res = repository.findById(saved.getId());
 		assertThat(res).isEmpty();
 	}
+
+	@Test
+	void testGetCategory() {
+		Optional<Product> product = repository.findByDescription("Product 1");
+		assertThat(product).isPresent();
+		assertThat(product.get().getCategories()).hasSize(1);
+		assertThat(product.get().getCategories()).first().extracting("description").isEqualTo("CAT3");
+	}
+
+	@Test
+	void testGetCategoryNotFound() {
+		Optional<Product> product = repository.findByDescription("Product 5");
+		assertThat(product).isPresent();
+		assertThat(product.get().getCategories()).isEmpty();
+	}
 }

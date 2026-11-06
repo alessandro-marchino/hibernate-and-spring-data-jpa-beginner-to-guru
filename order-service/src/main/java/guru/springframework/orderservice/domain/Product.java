@@ -5,6 +5,7 @@ import java.util.Set;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -31,4 +32,8 @@ public class Product extends BaseEntity {
 	@OneToMany(mappedBy = "product")
 	@ToString.Exclude
 	private Set<OrderLine> orderLines;
+
+	@ManyToMany(mappedBy = "products")
+	@ToString.Exclude
+	private Set<Category> categories;
 }
