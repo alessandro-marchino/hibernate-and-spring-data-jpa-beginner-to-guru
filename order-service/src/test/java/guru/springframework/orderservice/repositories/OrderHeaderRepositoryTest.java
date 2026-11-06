@@ -45,17 +45,23 @@ public class OrderHeaderRepositoryTest {
 		assertThat(saved.getId()).isGreaterThan(5L);
 		assertThat(saved.getCustomerName()).isEqualTo("My test customer");
 		assertThat(saved.getCreatedDate()).isNotNull();
+		assertThat(saved.getLastModifiedDate()).isNotNull();
 	}
 
 	@Test
 	void testUpdate() {
-		OrderHeader saved = repository.save(OrderHeader.builder().customerName("My test customer").build());
+		OrderHeader saved = repository.saveAndFlush(OrderHeader.builder().customerName("My test customer").build());
 		assertThat(saved).isNotNull();
+		assertThat(saved.getId()).isNotNull();
+		assertThat(saved.getCreatedDate()).isNotNull();
+		assertThat(saved.getLastModifiedDate()).isNotNull();
 
 		saved.setCustomerName("My new name");
-		OrderHeader updated = repository.save(saved);
+		OrderHeader updated = repository.saveAndFlush(saved);
 		assertThat(updated.getId()).isEqualTo(saved.getId());
 		assertThat(updated.getCustomerName()).isEqualTo("My new name");
+		assertThat(updated.getCreatedDate()).isNotNull();
+		assertThat(updated.getLastModifiedDate()).isNotNull();
 	}
 
 	@Test

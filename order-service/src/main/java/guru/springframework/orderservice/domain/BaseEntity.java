@@ -1,8 +1,9 @@
 package guru.springframework.orderservice.domain;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -31,5 +32,7 @@ public abstract class BaseEntity {
 	private Long id;
 	@CreationTimestamp
 	@Column(updatable = false)
-	private OffsetDateTime createdDate;
+	private LocalDateTime createdDate;
+	@UpdateTimestamp
+	private LocalDateTime lastModifiedDate;
 }
