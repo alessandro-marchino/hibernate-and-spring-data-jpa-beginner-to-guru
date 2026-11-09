@@ -49,7 +49,7 @@ public class OrderHeader extends BaseEntity {
 	private Set<OrderLine> orderLines;
 	@ManyToOne
 	private Customer customer;
-	@OneToOne
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE })
 	private OrderApproval orderApproval;
 
 	public void addOrderLine(OrderLine orderLine) {

@@ -17,13 +17,16 @@ import guru.springframework.orderservice.domain.OrderHeader;
 import guru.springframework.orderservice.domain.OrderLine;
 import guru.springframework.orderservice.domain.OrderStatus;
 import guru.springframework.orderservice.domain.Product;
+import lombok.extern.slf4j.Slf4j;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@Slf4j
 public class OrderHeaderRepositoryTest {
 	@Autowired OrderHeaderRepository repository;
 	@Autowired ProductRepository productRepository;
 	@Autowired CustomerRepository customerRepository;
+
 	@Autowired OrderApprovalRepository orderApprovalRepository;
 
 	@Test
@@ -80,6 +83,9 @@ public class OrderHeaderRepositoryTest {
 
 		assertThat(saved.getOrderLines()).hasSize(1);
 		assertThat(saved.getOrderApproval().getId()).isEqualTo(approval.getId());
+		log.info("OrderHeader id: {}", saved.getId());
+		log.info("OrderApproval id: {}", saved.getOrderApproval().getId());
+		saved.getOrderLines().forEach(orderLine -> log.info("OrderLine id: {}", orderLine.getId()));
 	}
 
 	@Test
@@ -102,17 +108,38 @@ public class OrderHeaderRepositoryTest {
 
 	@Test
 	void testDelete() {
+		Product product = createProduct();
 		Customer customer = createCustomer();
-		OrderHeader saved = repository.save(OrderHeader.builder().customer(customer).build());
-		assertThat(saved).isNotNull();
+		OrderApproval approval = createApproval();
 
+		OrderHeader oh = OrderHeader.builder()
+			.customer(customer)
+			.orderStatus(OrderStatus.NEW)
+			.orderApproval(approval)
+			.build();
+		oh.addOrderLine(OrderLine.builder()
+			.product(product)
+			.quantityOrdered(5)
+			.build());
+
+		OrderHeader saved = repository.save(oh);
+		assertThat(saved).isNotNull();
+		Long approvalId = saved.getOrderApproval().getId();
+		Optional<OrderApproval> orderLineSearch = orderApprovalRepository.findById(approvalId);
+		assertThat(orderLineSearch).isNotEmpty();
+
+		repository.flush();
 		repository.deleteById(saved.getId());
+		repository.flush();
 
 		Optional<OrderHeader> res = repository.findById(saved.getId());
 		assertThat(res).isEmpty();
 
 		Optional<Customer> customerSearch = customerRepository.findById(customer.getId());
 		assertThat(customerSearch).isNotEmpty();
+
+		orderLineSearch = orderApprovalRepository.findById(approvalId);
+		assertThat(orderLineSearch).isEmpty();
 	}
 
 	private Product createProduct() {
@@ -124,6 +151,6 @@ public class OrderHeaderRepositoryTest {
 	}
 
 	private OrderApproval createApproval() {
-		return orderApprovalRepository.saveAndFlush(OrderApproval.builder().approvedBy("Me").build());
+		return OrderApproval.builder().approvedBy("Me").build();
 	}
 }
