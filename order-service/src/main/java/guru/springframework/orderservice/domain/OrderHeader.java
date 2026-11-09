@@ -14,6 +14,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,16 +47,14 @@ public class OrderHeader extends BaseEntity {
 	private OrderStatus orderStatus;
 	@OneToMany(mappedBy = "orderHeader", cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE })
 	@ToString.Exclude
-	private Set<OrderLine> orderLines;
+	@Builder.Default
+	private Set<OrderLine> orderLines = new HashSet<>();
 	@ManyToOne
 	private Customer customer;
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE })
 	private OrderApproval orderApproval;
 
 	public void addOrderLine(OrderLine orderLine) {
-		if(orderLines == null) {
-			orderLines = new HashSet<>();
-		}
 		orderLines.add(orderLine);
 		orderLine.setOrderHeader(this);
 	}
