@@ -1,6 +1,8 @@
 package guru.springframework.orderservice.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -20,4 +22,7 @@ import lombok.experimental.SuperBuilder;
 public class OrderApproval extends BaseEntity {
 
 	private String approvedBy;
+	@OneToOne
+	@JoinColumn(name = "order_header_id")
+	private OrderHeader orderHeader;
 }

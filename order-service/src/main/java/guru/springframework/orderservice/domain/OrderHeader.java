@@ -59,4 +59,9 @@ public class OrderHeader extends BaseEntity {
 		orderLines.add(orderLine);
 		orderLine.setOrderHeader(this);
 	}
+
+	public void setOrderApproval(OrderApproval orderApproval) {
+		this.orderApproval = orderApproval;
+		orderApproval.setOrderHeader(this);
+	}
 }
