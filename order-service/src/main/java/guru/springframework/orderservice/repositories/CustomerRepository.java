@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import guru.springframework.orderservice.domain.Customer;
-import guru.springframework.orderservice.domain.Product;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 

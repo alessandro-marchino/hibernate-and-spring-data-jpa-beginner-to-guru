@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -49,7 +50,7 @@ public class OrderHeader extends BaseEntity {
 	@ToString.Exclude
 	@Builder.Default
 	private Set<OrderLine> orderLines = new HashSet<>();
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Customer customer;
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE })
 	private OrderApproval orderApproval;
