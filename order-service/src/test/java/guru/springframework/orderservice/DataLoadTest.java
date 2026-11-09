@@ -1,8 +1,12 @@
 package guru.springframework.orderservice;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.ArrayList;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -43,6 +47,17 @@ public class DataLoadTest {
 		OrderHeader orderHeader = orderHeaderRepository.findById(128L).orElseThrow();
 		log.info("Order ID is {}", orderHeader.getId());
 		log.info("Customer name is {}", orderHeader.getCustomer().getCustomerName());
+	}
+
+	@Test
+	void testNPlusOneProblem() {
+		Customer customer = customerRepository.findCustomerByCustomerNameIgnoreCase(TEST_CUSTOMER).orElseThrow();
+		IntSummaryStatistics totalOrdered = orderHeaderRepository.findAllByCustomer(customer)
+			.stream()
+			.flatMap(orderHeader -> orderHeader.getOrderLines().stream())
+			.collect(Collectors.summarizingInt(OrderLine::getQuantityOrdered));
+		assertThat(totalOrdered).isNotNull();
+		log.info("Total ordered: {}", totalOrdered.getSum());
 	}
 
 	@Test

@@ -3,6 +3,9 @@ package guru.springframework.orderservice.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -46,7 +49,8 @@ public class OrderHeader extends BaseEntity {
 	private Address billToAddress;
 	@Enumerated(EnumType.STRING)
 	private OrderStatus orderStatus;
-	@OneToMany(mappedBy = "orderHeader", cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE })
+	@OneToMany(mappedBy = "orderHeader", cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE }, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
 	@ToString.Exclude
 	@Builder.Default
 	private Set<OrderLine> orderLines = new HashSet<>();
