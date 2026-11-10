@@ -61,6 +61,17 @@ public class DataLoadTest {
 	}
 
 	@Test
+	void testDBLock() {
+		Long id = 1L;
+		OrderHeader orderHeader = orderHeaderRepository.findById(id).orElseThrow();
+		Address billTo = new Address();
+		billTo.setAddress("Bill me");
+		orderHeader.setBillToAddress(billTo);
+		orderHeaderRepository.saveAndFlush(orderHeader);
+		log.info("I updated the order");
+	}
+
+	@Test
 	@Commit
 	@Disabled
 	void testDataLoader() {
