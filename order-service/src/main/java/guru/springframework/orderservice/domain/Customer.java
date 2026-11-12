@@ -6,6 +6,7 @@ import java.util.Set;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,6 +29,8 @@ public class Customer extends BaseEntity {
 	private Address address;
 	private String phone;
 	private String email;
+	@Version
+	private Integer version;
 
 	@OneToMany(mappedBy = "customer")
 	@ToString.Exclude

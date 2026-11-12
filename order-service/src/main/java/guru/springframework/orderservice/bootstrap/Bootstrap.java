@@ -4,7 +4,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import guru.springframework.orderservice.domain.Customer;
 import guru.springframework.orderservice.domain.OrderHeader;
+import guru.springframework.orderservice.repositories.CustomerRepository;
 import guru.springframework.orderservice.repositories.OrderHeaderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Bootstrap implements CommandLineRunner {
 
 	private final OrderHeaderRepository orderHeaderRepository;
+	private final CustomerRepository customerRepository;
 
 	@Override
 	@Transactional
@@ -24,5 +27,12 @@ public class Bootstrap implements CommandLineRunner {
 			log.info(ol.getProduct().getDescription());
 			ol.getProduct().getCategories().forEach(cat -> log.info(cat.getDescription()));
 		});
+
+		Customer customer = new Customer();
+		customer.setCustomerName("Testing version");
+		Customer savedCustomer = customerRepository.save(customer);
+		log.info("Version is: {}", savedCustomer.getVersion());
+		customerRepository.deleteById(customer.getId());
+
 	}
 }
