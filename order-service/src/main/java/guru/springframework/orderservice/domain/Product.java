@@ -2,6 +2,7 @@ package guru.springframework.orderservice.domain;
 
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,6 +30,9 @@ public class Product extends BaseEntity {
 	private String description;
 	@Enumerated(EnumType.STRING)
 	private ProductStatus productStatus;
+	@Column(name = "quantity_on_hand")
+	private Integer quantityOnHand;
+
 	@OneToMany(mappedBy = "product")
 	@ToString.Exclude
 	private Set<OrderLine> orderLines;
@@ -36,4 +40,5 @@ public class Product extends BaseEntity {
 	@ManyToMany(mappedBy = "products")
 	@ToString.Exclude
 	private Set<Category> categories;
+
 }

@@ -34,6 +34,7 @@ public class ProductRepositoryTest {
 		Optional<Product> res = repository.findById(1L);
 		assertThat(res).isPresent();
 		assertThat(res.get().getDescription()).isEqualTo("Product 1");
+		assertThat(res.get().getQuantityOnHand()).isEqualTo(10);
 	}
 
 	@Test
@@ -44,9 +45,10 @@ public class ProductRepositoryTest {
 
 	@Test
 	void testInsert() {
-		Product saved = repository.save(Product.builder().description("My test product").productStatus(ProductStatus.NEW).build());
+		Product saved = repository.save(Product.builder().description("My test product").productStatus(ProductStatus.NEW).quantityOnHand(15).build());
 		assertThat(saved).isNotNull();
 		assertThat(saved.getId()).isGreaterThan(5L);
+		assertThat(saved.getQuantityOnHand()).isEqualTo(15);
 		assertThat(saved.getDescription()).isEqualTo("My test product");
 		assertThat(saved.getCreatedDate()).isNotNull();
 		assertThat(saved.getLastModifiedDate()).isNotNull();
@@ -54,16 +56,19 @@ public class ProductRepositoryTest {
 
 	@Test
 	void testUpdate() {
-		Product saved = repository.save(Product.builder().description("My test product").productStatus(ProductStatus.NEW).build());
+		Product saved = repository.save(Product.builder().description("My test product").productStatus(ProductStatus.NEW).quantityOnHand(15).build());
 		assertThat(saved).isNotNull();
 		assertThat(saved.getId()).isNotNull();
+		assertThat(saved.getQuantityOnHand()).isEqualTo(15);
 		assertThat(saved.getCreatedDate()).isNotNull();
 		assertThat(saved.getLastModifiedDate()).isNotNull();
 
 		saved.setDescription("My new name");
+		saved.setQuantityOnHand(14);
 		Product updated = repository.saveAndFlush(saved);
 		assertThat(updated.getId()).isEqualTo(saved.getId());
 		assertThat(updated.getDescription()).isEqualTo("My new name");
+		assertThat(updated.getQuantityOnHand()).isEqualTo(14);
 		assertThat(updated.getCreatedDate()).isNotNull();
 		assertThat(updated.getLastModifiedDate()).isNotNull();
 	}
