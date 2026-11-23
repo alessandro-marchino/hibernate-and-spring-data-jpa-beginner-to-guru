@@ -30,9 +30,17 @@ public class Bootstrap implements CommandLineRunner {
 
 		Customer customer = new Customer();
 		customer.setCustomerName("Testing version");
-		Customer savedCustomer = customerRepository.save(customer);
-		log.info("Version is: {}", savedCustomer.getVersion());
-		customerRepository.deleteById(customer.getId());
+		Customer savedCustomer = customerRepository.saveAndFlush(customer);
+		log.info("Version is: {} - id is {}", savedCustomer.getVersion(), savedCustomer.getId());
 
+		savedCustomer.setCustomerName("Testing version 2");
+		customerRepository.saveAndFlush(savedCustomer);
+		log.info("Version is: {} - id is {}", savedCustomer.getVersion(), savedCustomer.getId());
+
+		savedCustomer.setCustomerName("Testing version 3");
+		customerRepository.saveAndFlush(savedCustomer);
+		log.info("Version is: {} - id is {}", savedCustomer.getVersion(), savedCustomer.getId());
+
+		customerRepository.deleteById(customer.getId());
 	}
 }
