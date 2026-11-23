@@ -17,6 +17,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -58,6 +59,8 @@ public class OrderHeader extends BaseEntity {
 	private Customer customer;
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE })
 	private OrderApproval orderApproval;
+	@Version
+	private Integer version;
 
 	public void addOrderLine(OrderLine orderLine) {
 		orderLines.add(orderLine);

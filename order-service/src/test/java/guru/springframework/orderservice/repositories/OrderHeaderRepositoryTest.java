@@ -32,7 +32,7 @@ public class OrderHeaderRepositoryTest {
 	@Test
 	void testFindAll() {
 		List<OrderHeader> res = repository.findAll();
-		assertThat(res).hasSize(5);
+		assertThat(res).hasSize(105);
 	}
 
 	@Test

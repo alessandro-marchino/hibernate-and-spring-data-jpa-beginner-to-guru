@@ -3,6 +3,7 @@ package guru.springframework.orderservice.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,4 +27,7 @@ public class OrderLine extends BaseEntity {
 
 	@ManyToOne
 	private Product product;
+
+	@Version
+	private Integer version;
 }
