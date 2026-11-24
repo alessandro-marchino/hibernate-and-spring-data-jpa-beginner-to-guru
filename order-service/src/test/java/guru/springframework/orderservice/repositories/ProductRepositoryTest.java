@@ -10,14 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace;
+import org.springframework.context.annotation.ComponentScan;
 
 import guru.springframework.orderservice.domain.Product;
 import guru.springframework.orderservice.domain.ProductStatus;
+import guru.springframework.orderservice.services.ProductService;
 
 @DataJpaTest
+@ComponentScan(basePackageClasses = { ProductService.class })
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class ProductRepositoryTest {
 	@Autowired ProductRepository repository;
+	@Autowired ProductService productService;
 
 	@Test
 	void testFindAll() {
@@ -97,5 +101,16 @@ public class ProductRepositoryTest {
 		Optional<Product> product = repository.findByDescription("Product 5");
 		assertThat(product).isPresent();
 		assertThat(product.get().getCategories()).isEmpty();
+	}
+
+	@Test
+	void addAndUpdateProduct() {
+		Product product = Product.builder().description("My Product").productStatus(ProductStatus.NEW).build();
+		Product savedProduct = productService.saveProduct(product);
+
+		Product savedProduct2 = productService.updateQuantityOnHand(savedProduct.getId(), 25);
+		assertThat(savedProduct2.getId()).isEqualTo(savedProduct.getId());
+		assertThat(savedProduct2.getDescription()).isEqualTo(savedProduct.getDescription());
+		assertThat(savedProduct2.getQuantityOnHand()).isEqualTo(25);
 	}
 }
