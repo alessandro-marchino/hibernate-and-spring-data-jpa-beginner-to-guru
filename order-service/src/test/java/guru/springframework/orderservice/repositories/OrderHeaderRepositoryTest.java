@@ -11,6 +11,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace;
 
+import guru.springframework.orderservice.domain.Address;
 import guru.springframework.orderservice.domain.Customer;
 import guru.springframework.orderservice.domain.OrderApproval;
 import guru.springframework.orderservice.domain.OrderHeader;
@@ -147,7 +148,13 @@ public class OrderHeaderRepositoryTest {
 	}
 
 	private Customer createCustomer() {
-		return customerRepository.saveAndFlush(Customer.builder().customerName("My test customer").build());
+		return customerRepository.saveAndFlush(Customer.builder()
+			.customerName("My test customer")
+			.phone("0123465789")
+			.address(Address.builder()
+				.city("City A")
+				.build())
+			.build());
 	}
 
 	private OrderApproval createApproval() {

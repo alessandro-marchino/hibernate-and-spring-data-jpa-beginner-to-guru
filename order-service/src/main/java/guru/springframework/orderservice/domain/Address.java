@@ -1,5 +1,7 @@
 package guru.springframework.orderservice.domain;
 
+import org.hibernate.validator.constraints.Length;
+
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +19,7 @@ import lombok.Setter;
 @Embeddable
 public class Address {
 	private String address;
+	@Length(max = 30)
 	private String city;
 	private String state;
 	private String zipCode;
