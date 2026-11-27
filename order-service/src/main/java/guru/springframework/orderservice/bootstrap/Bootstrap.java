@@ -6,8 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import guru.springframework.orderservice.domain.Customer;
 import guru.springframework.orderservice.domain.OrderHeader;
+import guru.springframework.orderservice.domain.Product;
+import guru.springframework.orderservice.domain.ProductStatus;
 import guru.springframework.orderservice.repositories.CustomerRepository;
 import guru.springframework.orderservice.repositories.OrderHeaderRepository;
+import guru.springframework.orderservice.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,9 +22,23 @@ public class Bootstrap implements CommandLineRunner {
 	private final OrderHeaderRepository orderHeaderRepository;
 	private final CustomerRepository customerRepository;
 
+	private final ProductService productService;
+
+	private void updateProduct() {
+		Product product = new Product();
+		product.setDescription("My Product");
+		product.setProductStatus(ProductStatus.NEW);
+		Product savedProduct = productService.saveProduct(product);
+		Product savedProduct2 = productService.updateQuantityOnHand(savedProduct.getId(), 25);
+		log.info("Updated Qty: {}", savedProduct2.getQuantityOnHand());
+		productService.deleteProduct(savedProduct.getId());
+	}
+
 	@Override
 	@Transactional
 	public void run(String... args) throws Exception {
+		updateProduct();
+
 		OrderHeader orderHeader = orderHeaderRepository.findById(128L).orElseThrow();
 		orderHeader.getOrderLines().forEach(ol -> {
 			log.info(ol.getProduct().getDescription());

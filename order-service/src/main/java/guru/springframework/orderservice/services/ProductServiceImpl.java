@@ -23,4 +23,9 @@ public class ProductServiceImpl implements ProductService {
 		product.setQuantityOnHand(quantityOnHand);
 		return productRepository.saveAndFlush(product);
 	}
+
+	@Override
+	public void deleteProduct(Long id) {
+		productRepository.deleteById(id);
+	}
 }

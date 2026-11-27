@@ -6,4 +6,5 @@ public interface ProductService {
 
 	Product saveProduct(Product product);
 	Product updateQuantityOnHand(Long id, Integer quantityOnHand);
+	void deleteProduct(Long id);
 }
